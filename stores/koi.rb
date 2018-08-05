@@ -13,6 +13,6 @@ module Stores
         item_elem.find_element(css: '.txt').text,
         nil
       )
-    }
+    }.reject { |shop| shop.title.empty? }
   end
 end

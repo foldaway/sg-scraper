@@ -15,6 +15,6 @@ module Stores
           : nil,
         nil
       )
-    }
+    }.reject { |shop| shop.title.empty? }
   end
 end

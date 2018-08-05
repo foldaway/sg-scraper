@@ -14,6 +14,6 @@ module Stores
         nil,
         item_elem.find_elements(css: '.p-area')[1].text
       )
-    }
+      }.reject { |shop| shop.title.empty? }
   end
 end
