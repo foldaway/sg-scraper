@@ -1,22 +1,22 @@
 require_relative 'stores'
 require_relative './util/onemap'
-require 'pry'
 
 data = Hash.new
 onemap_client = OneMapClient.new
 
 methods = Stores.methods(false)
 methods.each do |m|
+  puts "Processing #{m}"
   data[m] = Stores.public_send(m)
 end
 
 data.each do |boba_chain, shops|
   for shop in shops do
-    shop.location = onemap_client.search(
-      shop.address.scan(/(\d{6})/).flatten.first
-    ).first
-    sleep(0.1)
+    post_code = shop.address.scan(/(\d{6})/).flatten.first
+    puts "Finding location for #{shop.title}. Postal: #{post_code}"
+    shop.location = onemap_client.search(post_code).first
+    sleep(0.5)
   end
 end
 
-binding.pry
+puts JSON.pretty_generate(data)
