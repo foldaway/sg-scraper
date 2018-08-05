@@ -4,7 +4,7 @@ class BobaShop
   attr_reader :phone
   attr_reader :opening_hours
 
-  def initialize(title, address, phone, opening_hours = '')
+  def initialize(title, address, phone, opening_hours = nil)
     @title = title
     @address = address
     @phone = phone
