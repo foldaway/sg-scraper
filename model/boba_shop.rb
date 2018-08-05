@@ -12,4 +12,14 @@ class BobaShop
     @opening_hours = opening_hours
     @location = nil
   end
+
+  def to_json(options = {})
+    {
+      :title => @title,
+      :address => @address,
+      :phone => @phone,
+      :opening_hours => @opening_hours,
+      :location => @location,
+    }.to_json
+  end
 end
