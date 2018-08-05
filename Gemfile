@@ -9,3 +9,5 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem "selenium-webdriver", "~> 3.14"
 
 gem "pry", "~> 0.11.3", :group => [:development]
+
+gem "httparty", "~> 0.16.2"
