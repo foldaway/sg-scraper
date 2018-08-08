@@ -11,7 +11,8 @@ module Stores
         item_elem.find_element(css: '.titlebox').text,
         item_elem.find_element(css: '.txt a').text,
         item_elem.find_element(css: '.txt').text,
-        nil
+        nil,
+        'Koi'
       )
     }.reject { |shop| shop.title.empty? }
   end

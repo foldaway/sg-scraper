@@ -13,7 +13,8 @@ module Stores
         item_elem.find_elements(css: '.company_branch_phone').any? ?
           item_elem.find_element(css: '.company_branch_phone').text.scan(/Tel.+?:\s?(.+)/).flatten.first
           : nil,
-        nil
+        nil,
+        'LiHO'
       )
     }.reject { |shop| shop.title.empty? }
   end

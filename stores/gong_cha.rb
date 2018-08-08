@@ -12,7 +12,8 @@ module Stores
         item_elem.find_element(css: '.p-title').text,
         item_elem.find_element(css: '.p-area').text,
         nil,
-        item_elem.find_elements(css: '.p-area')[1].text
+        item_elem.find_elements(css: '.p-area')[1].text,
+        'Gong Cha'
       )
       }.reject { |shop| shop.title.empty? }
   end
