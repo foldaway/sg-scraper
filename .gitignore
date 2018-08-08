@@ -121,5 +121,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+temp/
 
 # End of https://www.gitignore.io/api/ruby,macos,linux,windows

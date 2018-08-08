@@ -1,18 +1,33 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.1.2)
+    dpl (1.9.8)
+    dpl-pages (1.9.8)
+      dpl (= 1.9.8)
+      octokit (~> 4.6.2)
+    faraday (0.15.2)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
     method_source (0.9.0)
     multi_xml (0.6.0)
+    multipart-post (2.0.0)
+    octokit (4.6.2)
+      sawyer (~> 0.8.0, >= 0.5.3)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    public_suffix (3.0.2)
     rubyzip (1.2.1)
+    sawyer (0.8.1)
+      addressable (>= 2.3.5, < 2.6)
+      faraday (~> 0.8, < 1.0)
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
@@ -21,6 +36,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dpl (~> 1.9)
+  dpl-pages (~> 1.9)
   httparty (~> 0.16.2)
   pry (~> 0.11.3)
   selenium-webdriver (~> 3.14)
