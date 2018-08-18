@@ -13,7 +13,7 @@ module Stores
           item_elem.find_elements(css: 'p').first.text,
           item_elem.find_elements(css: 'p')[1].text,
           nil,
-          'Each-A-Cup'
+          'Each-a-Cup'
         )
         }.reject { |shop| shop.title.empty? }
     }.flatten
