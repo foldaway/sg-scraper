@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.koi
     @driver.navigate.to 'https://www.koithe.com/en/global/koi-singapore'
 

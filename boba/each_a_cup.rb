@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.each_a_cup
     title_regex = Regexp.new('\(([\w\s]*)\)')
 

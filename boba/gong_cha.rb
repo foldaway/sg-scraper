@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.gong_cha
     # Gong Cha
     @driver.navigate.to 'http://www.gong-cha-sg.com/stores/'

@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.sharetea
     @driver.navigate.to 'http://www.1992sharetea.com/store.php'
 

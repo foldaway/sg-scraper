@@ -1,14 +1,14 @@
 require 'fileutils'
-require_relative 'stores'
+require_relative 'boba'
 require_relative './util/onemap'
 
 data = Array.new
 onemap_client = OneMapClient.new
 
-methods = Stores.methods(false)
+methods = Boba.methods(false)
 methods.each do |m|
   puts "[#{m}] Scraping started"
-  shops = Stores.public_send(m)
+  shops = Boba.public_send(m)
   data.push *shops
   puts "[#{m}] Scraped #{shops.size} shops"
 end

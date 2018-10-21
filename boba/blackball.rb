@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.blackball
     @driver.navigate.to 'http://blackball.com.sg/index.php/outlet-location/'
 
