@@ -1,2 +1,2 @@
-# boba-scraper
-Scripts to scrape boba shop metadata from boba chains in Singapore.
+# sg-scraper
+Scripts to scrape metadata of places in Singapore.
