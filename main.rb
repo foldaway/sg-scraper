@@ -30,6 +30,8 @@ Dir.mkdir('temp') unless File.exists?('temp')
 File.delete('temp/data.json') if File.exists?('temp/data.json')
 File.write('temp/data.json', JSON.pretty_generate(data))
 
-%x(dpl --provider=pages --committer-from-gh --github-token=$GITHUB_TOKEN --repo=$GITHUB_REPO --local-dir=temp)
+if ENV.has_key?('GITHUB_TOKEN')
+  %x(dpl --provider=pages --committer-from-gh --github-token=$GITHUB_TOKEN --repo=$GITHUB_REPO --local-dir=temp)
 
-FileUtils.remove_dir('temp')
+  FileUtils.remove_dir('temp')
+end
