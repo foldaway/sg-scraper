@@ -1,4 +1,4 @@
-module Stores
+module Boba
   def self.liho
     @driver.navigate.to 'http://www.streetdirectory.com/businessfinder/company_branch/163304/5890/'
 

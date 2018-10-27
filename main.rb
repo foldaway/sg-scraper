@@ -1,14 +1,14 @@
 require 'fileutils'
-require_relative 'stores'
+require_relative 'boba'
 require_relative './util/onemap'
 
 data = Array.new
 onemap_client = OneMapClient.new
 
-methods = Stores.methods(false)
+methods = Boba.methods(false)
 methods.each do |m|
   puts "[#{m}] Scraping started"
-  shops = Stores.public_send(m)
+  shops = Boba.public_send(m)
   data.push *shops
   puts "[#{m}] Scraped #{shops.size} shops"
 end
@@ -30,6 +30,8 @@ Dir.mkdir('temp') unless File.exists?('temp')
 File.delete('temp/data.json') if File.exists?('temp/data.json')
 File.write('temp/data.json', JSON.pretty_generate(data))
 
-%x(dpl --provider=pages --committer-from-gh --github-token=$GITHUB_TOKEN --repo=$GITHUB_REPO --local-dir=temp)
+if ENV.has_key?('GITHUB_TOKEN')
+  %x(dpl --provider=pages --committer-from-gh --github-token=$GITHUB_TOKEN --repo=$GITHUB_REPO --local-dir=temp)
 
-FileUtils.remove_dir('temp')
+  FileUtils.remove_dir('temp')
+end
