@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'redis'
+require 'json'
 require_relative 'boba'
 require_relative './util/onemap'
 
@@ -13,14 +15,22 @@ methods.each do |m|
   puts "[#{m}] Scraped #{shops.size} shops"
 end
 
+redis = Redis.new
+redis.select 1
+
 for shop in data do
   location_search_term = shop.address.scan(/(\d{6})/).flatten.first # Try postcode
   if location_search_term.nil?
     location_search_term = shop.address.gsub(/(#.{1,5}-.{1,3})/i, '') # Try raw address with unit number removed
   end
-  location_results = onemap_client.search(location_search_term)
+  location_results = if redis.exists(location_search_term)
+    [JSON.parse(redis.get(location_search_term))]
+  else
+    onemap_client.search(location_search_term)
+  end
   unless location_results.nil?
     shop.location = location_results.first
+    redis.set(location_search_term, location_results.first.to_json)
   end
   puts "[OneMap] '#{location_search_term}' => #{JSON.generate(shop.location)}"
   sleep(0.5)

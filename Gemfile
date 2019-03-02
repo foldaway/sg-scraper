@@ -15,3 +15,5 @@ gem "httparty", "~> 0.16.2"
 gem "dpl", "~> 1.9"
 
 gem "dpl-pages", "~> 1.9"
+
+gem "redis", "~> 4.1"
