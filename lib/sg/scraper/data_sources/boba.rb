@@ -1,4 +1,6 @@
 require_relative './data_source.rb'
+require_relative '../util/onemap'
+require 'redis'
 
 # Represents a bubble tea shop
 module Sg
@@ -36,6 +38,12 @@ module Sg
     class Boba
       include DataSource
 
+      def initialize
+        super
+
+        @onemap_client = OneMapClient.new
+      end
+
       def blackball
         @driver.navigate.to 'http://blackball.com.sg/index.php/outlet-location/'
 
@@ -51,7 +59,7 @@ module Sg
             item_elem.find_element(css: '.location-time-pro').text,
             'BlackBall'
           )
-        }.reject { |shop| shop.title.empty? }
+        }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
       end
 
       def each_a_cup
@@ -78,7 +86,7 @@ module Sg
               'Each-a-Cup'
             )
           }.reject { |shop| shop.title.empty? }
-        }.flatten
+        }.flatten.map { |shop| fetch_shop_location(shop) }
       end
 
       def gong_cha
@@ -97,7 +105,7 @@ module Sg
             item_elem.find_element(css: '.p-time').text,
             'Gong Cha'
           )
-        }.reject { |shop| shop.title.empty? }
+        }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
       end
 
       def koi
@@ -115,7 +123,7 @@ module Sg
             nil,
             'Koi'
           )
-        }.reject { |shop| shop.title.empty? }
+        }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
       end
 
       def liho
@@ -135,7 +143,7 @@ module Sg
             nil,
             'LiHO'
           )
-        }.reject { |shop| shop.title.empty? }
+        }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
       end
 
       def sharetea
@@ -166,7 +174,44 @@ module Sg
             nil,
             'Sharetea'
           )
-        }.reject { |shop| shop.title.empty? }
+        }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
+      end
+
+      private
+
+      # Lookup a location
+      # @param [String] raw_text
+      def lookup_location(raw_text)
+        redis = Redis.new
+        redis.select 1
+        location_search_term = process_shop_address(raw_text)
+        location_results = if redis.exists(location_search_term)
+                             [JSON.parse(redis.get(location_search_term))]
+                           else
+                             @onemap_client.search(location_search_term)
+                           end
+        redis.set(location_search_term, location_results.first.to_json)
+        puts "[OneMap] '#{location_search_term}' => #{JSON.generate(location_results.first)}"
+        sleep 0.3
+        location_results
+      end
+
+      def fetch_shop_location(shop)
+        location_results = lookup_location(shop.address)
+        unless location_results.nil?
+          shop.location = location_results.first
+        end
+        shop
+      end
+
+      # Sanitise a shop address for OneMap
+      # @param [String] address
+      def process_shop_address(address)
+        location_search_term = address.scan(/(\d{6})/).flatten.first # Try postcode
+        if location_search_term.nil?
+          location_search_term = address.gsub(/(#.{1,5}-.{1,3})/i, '') # Try raw address with unit number removed
+        end
+        location_search_term
       end
     end
   end
