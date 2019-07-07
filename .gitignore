@@ -124,3 +124,4 @@ $RECYCLE.BIN/
 temp/
 
 # End of https://www.gitignore.io/api/ruby,macos,linux,windows
+.rubocop-https---relaxed-ruby-style-rubocop-yml
