@@ -6,9 +6,8 @@ module Sg
     module DataSource
       def initialize
         chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
-        opts_hash = {}
-        opts_hash['binary'] = chrome_bin unless chrome_bin.nil?
-        options = Selenium::WebDriver::Chrome::Options.new(opts_hash)
+        options = Selenium::WebDriver::Chrome::Options.new
+        options.add_option('binary', chrome_bin) unless chrome_bin.nil?
         options.add_argument('--headless') if ENV.key?('GITHUB_TOKEN')
         @driver = Selenium::WebDriver.for :chrome, options: options
       end
