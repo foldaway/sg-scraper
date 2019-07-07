@@ -193,6 +193,7 @@ module Sg
         redis.set(location_search_term, location_results.first.to_json)
         puts "[OneMap] '#{location_search_term}' => #{JSON.generate(location_results.first)}"
         sleep 0.3
+        redis.close
         location_results
       end
 
