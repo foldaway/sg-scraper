@@ -2,7 +2,22 @@
 
 require 'bundler/setup'
 require 'sg/scraper'
+require 'json'
 
 Dir.mkdir('temp') unless File.exist?('temp')
 
-Sg::Scraper.scrape 'boba'
+data_types = ['boba']
+
+data_types.each do |dt|
+  data = Sg::Scraper.scrape dt
+
+  filename = "temp/#{dt.downcase}.json"
+  File.delete(filename) if File.exist?(filename)
+  File.write(filename, JSON.pretty_generate(data))
+end
+
+if ENV.key?('GITHUB_TOKEN')
+  %x(`dpl --provider=pages --committer-from-gh --github-token=$GITHUB_TOKEN --repo=$GITHUB_REPO --local-dir=temp`)
+
+  FileUtils.remove_dir('temp')
+end
