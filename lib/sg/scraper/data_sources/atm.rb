@@ -63,29 +63,32 @@ module Sg
         wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
         wait.until { @driver.find_element(css: '.jspContainer') }
         
+        require 'pry'
+        binding.pry
+        
+        # Set to ATMs only
+        wait.until { @driver.find_element(css: '#selectBranch') }
+        @driver.find_element(css: '#selectBranch').click
+        
+        @driver.find_element(css: 'div[name="DBS"] .service-name').click
+        @driver.find_element(css: 'div[name="DL"] .service-name').click
+        @driver.find_element(css: 'div[name="ATM"] .service-name').click
+        @driver.find_element(css: '#listClose').click
+        
         page_numbers = @driver.find_elements(css: '.navnum')
         
         page_numbers.map { |pg_num_elem|
           pg_num_elem.click
-          sleep 0.5
+          sleep 0.2
           
           @driver.find_elements(css: 'div.store').map { |item_elem|
-            @driver.execute_script('arguments[0].scrollIntoView();', item_elem)
-            
             begin
-              item_elem.click
-              sleep 1
-              
-              begin
-                opening_hours = @driver.find_element(css: '.openhour').text
-              rescue NoSuchElementError
-                opening_hours = nil
-              end
+              @driver.execute_script('arguments[0].scrollIntoView();', item_elem)
               
               Atm.new(
                 item_elem.find_element(css: '.title').text,
                 "#{item_elem.find_element(css: '.address').text} #{item_elem.find_element(css: '.postal_code').text}",
-                opening_hours,
+                '24/7',
                 'DBS'
               )
             rescue Exception => e
