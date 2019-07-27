@@ -34,6 +34,29 @@ module Sg
         super
       end
       
+      def ocbc
+        @driver.navigate.to 'https://www.ocbc.com/personal-banking/locate-us.html'
+        
+        wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
+        wait.until { @driver.find_element(css: '#tab2') }
+        
+        list_view_button = @driver.find_element(css: '#tab2')
+        @driver.execute_script('arguments[0].scrollIntoView();', list_view_button)
+        
+        list_view_button.click # List View
+        
+        branches = @driver.find_elements(css: '.address-column')
+        
+        branches.map { |branch_elem|
+          Atm.new(
+            branch_elem.find_element(css: 'strong').text,
+            branch_elem.find_element(css: 'font').text,
+            '24/7',
+            'OCBC'
+          )
+        }
+      end
+      
       def dbs
         @driver.navigate.to 'https://www.dbs.com.sg/index/locator.page'
         
