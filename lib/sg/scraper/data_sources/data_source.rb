@@ -11,6 +11,27 @@ module Sg
         options.add_argument('--headless') if ENV.key?('GITHUB_TOKEN')
         @driver = Selenium::WebDriver.for :chrome, options: options
       end
+      
+      private
+      
+      # Lookup a location
+      # @param [String] raw_text
+      def lookup_location(raw_text)
+        redis = Redis.new
+        redis.select 1
+
+        location_results = if redis.exists(raw_text)
+                             [JSON.parse(redis.get(raw_text))]
+                           else
+                             @onemap_client.search(raw_text)
+                           end
+        redis.set(raw_text, location_results.first.to_json)
+        puts "[OneMap] '#{raw_text}' => #{JSON.generate(location_results.first)}"
+        sleep 0.3
+        redis.close
+        location_results
+      end
+
     end
   end
 end

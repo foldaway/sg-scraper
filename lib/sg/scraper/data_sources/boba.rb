@@ -179,26 +179,8 @@ module Sg
 
       private
 
-      # Lookup a location
-      # @param [String] raw_text
-      def lookup_location(raw_text)
-        redis = Redis.new
-        redis.select 1
-        location_search_term = process_shop_address(raw_text)
-        location_results = if redis.exists(location_search_term)
-                             [JSON.parse(redis.get(location_search_term))]
-                           else
-                             @onemap_client.search(location_search_term)
-                           end
-        redis.set(location_search_term, location_results.first.to_json)
-        puts "[OneMap] '#{location_search_term}' => #{JSON.generate(location_results.first)}"
-        sleep 0.3
-        redis.close
-        location_results
-      end
-
       def fetch_shop_location(shop)
-        location_results = lookup_location(shop.address)
+        location_results = lookup_location(process_shop_address(shop.address))
         unless location_results.nil?
           shop.location = location_results.first
         end
