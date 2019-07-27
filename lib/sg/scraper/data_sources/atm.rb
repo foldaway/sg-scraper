@@ -48,7 +48,8 @@ module Sg
         branches = @driver.find_elements(css: '.address-column')
         
         branches.map { |branch_elem|
-          location_results = lookup_location(branch_elem.find_element(css: 'font').text)
+          address = branch_elem.find_element(css: 'font').text
+          location_results = lookup_location(address.scan(/\d{6}/).flatten.first)
           
           location = unless location_results.nil?
             location_results.first
