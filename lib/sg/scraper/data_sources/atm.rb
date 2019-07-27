@@ -48,9 +48,17 @@ module Sg
         branches = @driver.find_elements(css: '.address-column')
         
         branches.map { |branch_elem|
+          location_results = lookup_location(branch_elem.find_element(css: 'font').text)
+          
+          location = unless location_results.nil?
+            location_results.first
+          else
+            nil
+          end
+          
           Atm.new(
             branch_elem.find_element(css: 'strong').text,
-            branch_elem.find_element(css: 'font').text,
+            location,
             '24/7',
             'OCBC'
           )
@@ -62,9 +70,6 @@ module Sg
         
         wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
         wait.until { @driver.find_element(css: '.jspContainer') }
-        
-        require 'pry'
-        binding.pry
         
         # Set to ATMs only
         wait.until { @driver.find_element(css: '#selectBranch') }
@@ -85,9 +90,18 @@ module Sg
             begin
               @driver.execute_script('arguments[0].scrollIntoView();', item_elem)
               
+              location_search_term = item_elem.find_element(css: '.postal_code').text || item_elem.find_element(css: '.address').text
+              location_results = lookup_location(location_search_term)
+              
+              location = unless location_results.nil?
+                location_results.first
+              else
+                nil
+              end
+              
               Atm.new(
                 item_elem.find_element(css: '.title').text,
-                "#{item_elem.find_element(css: '.address').text} #{item_elem.find_element(css: '.postal_code').text}",
+                location,
                 '24/7',
                 'DBS'
               )
