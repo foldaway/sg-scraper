@@ -16,6 +16,7 @@ module Sg
 
       chosen_class = case data_type
                      when 'boba' then Boba
+                     when 'atm' then Atms
                      end
 
       results = []
