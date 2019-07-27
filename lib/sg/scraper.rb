@@ -9,8 +9,9 @@ module Sg
     class Error < StandardError; end
 
     # @param [String] type of data to scrape
+    # @param [String] specific method to call. optional.
     # @return [Hash]
-    def self.scrape(data_type)
+    def self.scrape(data_type, method = nil)
       project_root = File.dirname(File.absolute_path(__FILE__))
       Dir.glob(project_root + '/scraper/data_sources/*.rb', &method(:require))
 
@@ -21,7 +22,14 @@ module Sg
 
       results = []
       instance = chosen_class.new
-      chosen_class.instance_methods(false).each do |m|
+      
+      methods = if method.nil?
+        chosen_class.instance_methods(false)
+      else
+        [method.to_sym]
+      end
+      
+      methods.each do |m|
         puts "[#{m}] Scraping started"
         data = instance.send(m)
         results.push *data
