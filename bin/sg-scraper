@@ -6,7 +6,7 @@ require 'json'
 
 Dir.mkdir('temp') unless File.exist?('temp')
 
-data_types = ['boba']
+data_types = ['boba', 'atm']
 
 data_types.each do |dt|
   data = Sg::Scraper.scrape dt
