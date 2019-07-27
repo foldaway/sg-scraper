@@ -38,12 +38,6 @@ module Sg
     class Boba
       include DataSource
 
-      def initialize
-        super
-
-        @onemap_client = OneMapClient.new
-      end
-
       def blackball
         @driver.navigate.to 'http://blackball.com.sg/index.php/outlet-location/'
 
