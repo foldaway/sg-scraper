@@ -141,29 +141,32 @@ module Sg
       end
 
       def sharetea
-        @driver.navigate.to 'http://www.1992sharetea.com/store.php'
+        @driver.navigate.to 'http://www.1992sharetea.com/locations'
 
         wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
-        wait.until { @driver.find_element(css: '#nCS1') }
+        wait.until { @driver.find_element(css: '#wpsl-search-input') }
 
-        country_select = @driver.find_element(css: '#nCS1')
-        city_select = @driver.find_element(css: '#nCS2')
-        country_dropdown = Selenium::WebDriver::Support::Select.new(country_select)
-        city_dropdown = Selenium::WebDriver::Support::Select.new(city_select)
+        sleep 1
+
+        city_zip_search = @driver.find_element(css: '#wpsl-search-input')
+        city_zip_submit = @driver.find_element(css: '#wpsl-search-btn')
+
+        sleep 1
 
         # Set country and city
-        country_dropdown.select_by(:text, 'Singapore')
-        sleep 1
-        city_dropdown.select_by(:index, 0)
+        city_zip_search.send_keys('Singapore')
+        city_zip_submit.click
 
-        sleep 1
-        items = @driver.find_elements(css: '.locatBox')
+        wait.until { @driver.find_element(css: '.wpsl-street') }
+
+        items = @driver.find_elements(css: '#wpsl-stores > ul > li')
 
         items.map { |item_elem|
-          address = item_elem.find_element(css: '.addr').text
+          address = item_elem.find_element(css: '.wpsl-street').text
+          postal_code = item_elem.find_element(css: 'span:nth-child(2)').text
           BobaShop.new(
-            item_elem.find_element(css: 'h4').text,
-            address.gsub(/Woodlabd/i, 'Woodlands'),
+            item_elem.find_element(css: '.wpsl-store-location > p > strong > a').text,
+            "#{address}\n#{postal_code}",
             nil,
             nil,
             'Sharetea'
