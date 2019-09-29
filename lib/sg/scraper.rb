@@ -29,11 +29,17 @@ module Sg
         [method.to_sym]
       end
       
-      methods.each do |m|
-        puts "[#{m}] Scraping started"
-        data = instance.send(m)
-        results.push *data
-        puts "[#{m}] Scraped #{data.size} data"
+      begin
+        methods.each do |m|
+          puts "[#{m}] Scraping started"
+          data = instance.send(m)
+          results.push *data
+          puts "[#{m}] Scraped #{data.size} data"
+        end
+      rescue => e
+        puts e
+        puts e.backtrace
+        puts "Driver Screenshot (base64): #{instance.instance_variable_get(:@driver).screenshot_as(:base64)}"
       end
       results
     end
