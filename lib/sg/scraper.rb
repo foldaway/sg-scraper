@@ -2,6 +2,7 @@
 
 require 'sg/scraper/version'
 require_relative './scraper/data_sources/data_source.rb'
+require 'rest_client'
 
 module Sg
   # Scraper
@@ -39,7 +40,15 @@ module Sg
       rescue => e
         puts e
         puts e.backtrace
-        puts "Driver Screenshot (base64): #{instance.instance_variable_get(:@driver).screenshot_as(:base64)}"
+
+        base64_data = instance.instance_variable_get(:@driver).screenshot_as(:base64)
+
+        response = RestClient.post("https://api.imgbb.com/1/upload?key=b0bffdbc05689196b03fc1d3ae9ad5b4", {
+          :image => base64_data,
+          :name => "sg-scraper on #{RUBY_PLATFORM}"
+        })
+        img_url = JSON.parse(response)['data']['url_viewer']
+        puts "An error occurred, driver screenshot captured at #{img_url}"
       end
       results
     end
