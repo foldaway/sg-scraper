@@ -87,7 +87,7 @@ module Sg
         # Gong Cha
         @driver.navigate.to 'http://www.gong-cha-sg.com/stores/'
 
-        wait = Selenium::WebDriver::Wait.new(timeout: 20) # seconds
+        wait = Selenium::WebDriver::Wait.new(timeout: 30) # seconds
         wait.until { @driver.find_element(css: '.item') }
         items = @driver.find_elements(css: '.item')
 
