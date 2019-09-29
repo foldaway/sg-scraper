@@ -9,8 +9,8 @@ module Sg
         options = Selenium::WebDriver::Chrome::Options.new
         options.add_option('binary', chrome_bin) unless chrome_bin.nil?
         options.add_argument('--headless') if ENV.key?('GITHUB_TOKEN')
+        options.add_argument('window-size=1920,1080')
         @driver = Selenium::WebDriver.for :chrome, options: options
-        @driver.manage.window.resize_to(1920, 1080)
         @onemap_client = OneMapClient.new
       end
       
