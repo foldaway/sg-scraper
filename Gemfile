@@ -19,3 +19,5 @@ gem "dpl", "~> 1.9"
 gem "dpl-pages", "~> 1.9"
 
 gem "redis", "~> 4.1"
+
+gem "rest-client", "~> 2.1"
