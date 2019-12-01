@@ -144,31 +144,24 @@ module Sg
         @driver.navigate.to 'http://www.1992sharetea.com/locations'
 
         wait = Selenium::WebDriver::Wait.new(timeout: 10) # seconds
-        wait.until { @driver.find_element(css: '#wpsl-search-input') }
+        wait.until { @driver.find_elements(xpath: "//*[contains(text(), 'Singapore')]") }
 
         sleep 1
 
-        city_zip_search = @driver.find_element(css: '#wpsl-search-input')
-        city_zip_submit = @driver.find_element(css: '#wpsl-search-btn')
+        items = @driver.find_elements(xpath: "//*[contains(text(), 'Singapore')]/../../p/a")
 
-        sleep 1
+        items.select { |item|
+          item.displayed?
+        }.map { |item|
+          item.attribute('href')    
+      }.map { |url|
+          @driver.navigate.to url
 
-        # Set country and city
-        city_zip_search.send_keys('Singapore')
-        city_zip_submit.click
-
-        wait.until { @driver.find_element(css: '.wpsl-street') }
-
-        items = @driver.find_elements(css: '#wpsl-stores > ul > li')
-
-        items.map { |item_elem|
-          address = item_elem.find_element(css: '.wpsl-street').text
-          postal_code = item_elem.find_element(css: 'span:nth-child(2)').text
           BobaShop.new(
-            item_elem.find_element(css: '.wpsl-store-location > p > strong > a').text,
-            "#{address}\n#{postal_code}",
+            @driver.find_element(css: '.wpsl-locations-details > span:first-child').text,
+            @driver.find_element(css: '.wpsl-location-address').text,
             nil,
-            nil,
+            @driver.find_element(css: '.wpsl-opening-hours').text,
             'Sharetea'
           )
         }.reject { |shop| shop.title.empty? }.map { |shop| fetch_shop_location(shop) }
