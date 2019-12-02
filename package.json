@@ -1,0 +1,12 @@
+{
+  "name": "sg-scraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:bottleneckco/sg-scraper.git",
+  "author": "Duncan Leo <hello@duncanleo.me>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^2.0.0"
+  }
+}
