@@ -29,6 +29,10 @@ Example usage: await boba.gongCha(browser)
 `);
 
 const dev = async () => {
+  const browser = await puppeteer.launch({
+    headless: isProduction,
+  });
+
   const interpreter = repl.start();
   interpreter.setupHistory('.dev_repl_history', (err) => {
     if (err) {
@@ -37,9 +41,6 @@ const dev = async () => {
     }
   });
 
-  const browser = await puppeteer.launch({
-    headless: isProduction,
-  });
   interpreter.context.browser = browser;
 
   for (const module of MODULES) {
