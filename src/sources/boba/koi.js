@@ -1,14 +1,13 @@
-import puppeteer from 'puppeteer';
 import './model.js';
 
 /**
+ * @param {import('puppeteer').Browser} browser
  * @returns {Promise<Boba>}
  */
-export default async function koi() {
-  const browser = await puppeteer.launch({ headless: false });
+export default async function koi(browser) {
   const page = await browser.newPage();
   await page.goto('https://www.koithe.com/en/global/koi-singapore');
-  const outlets = await page.evaluate(() => {
+  return page.evaluate(() => {
     const items = [...document.querySelectorAll('.global-wrap .item')];
 
     return items.map((item) => ({
@@ -19,6 +18,4 @@ export default async function koi() {
       chain: 'Koi',
     }));
   });
-  await browser.close();
-  return outlets;
 }
