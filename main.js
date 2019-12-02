@@ -1,8 +1,35 @@
-import puppeteer from 'puppeteer';
+/* eslint-disable no-restricted-syntax */
+import path from 'path';
+import fs from 'fs';
+import * as boba from './src/sources/boba/index.js';
 
-(async () => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
+const isProduction = process.env.NODE_ENV === 'production';
+const MODULES = [boba];
 
-  await page.goto('https://example.com');
-})();
+if (!fs.existsSync('temp')) {
+  fs.mkdirSync('temp');
+}
+
+const main = async () => {
+  for (const module of MODULES) {
+    console.log(`[MODULE] ${module}`);
+    const filename = path.join('temp', `${module}.json`);
+    fs.unlinkSync(filename);
+    const data = [];
+    const dataSources = Object.keys(module)
+      .filter((key) => key !== 'toString');
+    for (const dataSource of dataSources) {
+      try {
+        const results = await module[dataSource]();
+        data.push(...results);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fs.writeFileSync(filename, JSON.stringify(data, null, isProduction ? 0 : 2));
+  }
+
+  return null;
+};
+
+main();

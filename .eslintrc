@@ -6,6 +6,7 @@
     "node": true
   },
   "rules": {
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "no-console": "off"
   }
 }
