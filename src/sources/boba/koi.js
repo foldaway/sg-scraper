@@ -2,7 +2,7 @@ import './model.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
- * @returns {Promise<Boba>}
+ * @returns {Promise<Boba[]>}
  */
 export default async function koi(browser) {
   const page = await browser.newPage();
