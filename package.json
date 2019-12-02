@@ -6,6 +6,9 @@
   "author": "Duncan Leo <hello@duncanleo.me>",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
   "dependencies": {
     "puppeteer": "^2.0.0"
   },
