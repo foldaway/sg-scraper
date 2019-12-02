@@ -21,7 +21,7 @@ export default async function sharetea(browser) {
     }
 
     return items
-      .filter((item) => item.offsetParent !== null)
+      .filter((item) => item.offsetHeight !== 0) // Filter out weird hidden outlet
       .map((item) => item.getAttribute('href'));
   });
 
