@@ -22,8 +22,9 @@ const main = async () => {
       try {
         const results = await module[dataSource]();
         data.push(...results);
+        console.log(`[DATA SOURCE] '${dataSource}'`, `- scraped ${results.length} items`);
       } catch (e) {
-        console.error(e);
+        console.error(`[DATA SOURCE] '${dataSource}'`, e);
       }
     }
     fs.writeFileSync(filename, JSON.stringify(data, null, isProduction ? 0 : 2));
