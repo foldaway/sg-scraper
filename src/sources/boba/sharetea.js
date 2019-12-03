@@ -40,5 +40,6 @@ export default async function sharetea(browser) {
     items.push(outlet);
   }
 
+  await page.close();
   return Promise.map(items, autoLocation, { concurrency: 1 });
 }

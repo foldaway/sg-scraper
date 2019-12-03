@@ -19,5 +19,6 @@ export default async function blackball(browser) {
       chain: 'BlackBall',
     }));
   });
+  await page.close();
   return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }

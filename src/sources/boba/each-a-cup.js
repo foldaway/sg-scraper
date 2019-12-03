@@ -37,5 +37,6 @@ export default async function eachACup(browser) {
     outlets.push(...results);
   }
 
+  await page.close();
   return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }

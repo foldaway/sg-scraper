@@ -28,6 +28,8 @@ export default async function liho(browser) {
       chain: 'LiHO',
     }));
   });
+
+  await page.close();
   return Promise.map(outlets, autoLocation, {
     concurrency: 1,
   });

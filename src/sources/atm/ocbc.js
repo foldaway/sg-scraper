@@ -27,5 +27,6 @@ export default async function ocbc(browser) {
     });
   });
 
+  await page.close();
   return Promise.map(atms, autoLocation, { concurrency: 1 });
 }

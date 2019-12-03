@@ -21,5 +21,6 @@ export default async function koi(browser) {
     }));
   });
 
+  await page.close();
   return Promise.map(outlets, autoLocation, { concurrency: 1});
 }

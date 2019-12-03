@@ -44,5 +44,6 @@ export default async function dbs(browser) {
     }).reduce((a, b) => a.concat(b)); // flatten 2D array
   });
 
+  await page.close();
   return Promise.map(atms, autoLocation, { concurrency: 1 });
 }

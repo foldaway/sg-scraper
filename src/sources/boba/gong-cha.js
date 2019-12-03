@@ -21,5 +21,6 @@ export default async function gongCha(browser) {
     }));
   });
 
+  await page.close();
   return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }
