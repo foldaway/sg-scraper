@@ -2,10 +2,9 @@
 import path from 'path';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
-import * as boba from './src/sources/boba/index.js';
+import MODULES from './modules.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const MODULES = [boba];
 
 if (!fs.existsSync('temp')) {
   fs.mkdirSync('temp');

@@ -1,10 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 import puppeteer from 'puppeteer';
 import repl from 'repl';
-import * as boba from './src/sources/boba/index.js';
+import MODULES from './modules.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const MODULES = [boba];
 
 const MODULES_DATA_SOURCES = MODULES
   .map((module) => Object.keys(module)
