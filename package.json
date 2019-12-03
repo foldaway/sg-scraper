@@ -6,6 +6,9 @@
   "author": "Duncan Leo <hello@duncanleo.me>",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": "13.2.0"
+  },
   "scripts": {
     "start": "node main.js",
     "dev": "node --experimental-repl-await dev.js",
