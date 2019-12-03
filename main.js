@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
 import fs from 'fs';
+import { spawnSync } from 'child_process';
 import puppeteer from 'puppeteer';
 import MODULES from './modules.js';
 
@@ -37,6 +38,10 @@ const main = async () => {
   }
 
   await browser.close();
+
+  if (process.env.GITHUB_TOKEN) {
+    spawnSync(`dpl --provider=pages --committer-from-gh --github-token=${process.env.GITHUB_TOKEN} --repo=${process.env.GITHUB_REPO} --local-dir=temp`);
+  }
 
   return null;
 };
