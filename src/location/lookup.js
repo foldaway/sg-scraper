@@ -7,7 +7,7 @@ import search from '../onemap/onemap.js';
  * @param {string} rawText
  */
 export default async function lookupLocation(rawText) {
-  const client = redis.createClient();
+  const client = redis.createClient(process.env.REDIS_URL);
 
   // Promisify
   const existsA = promisify(client.exists).bind(client);
