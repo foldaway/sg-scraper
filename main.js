@@ -14,6 +14,7 @@ if (!fs.existsSync('temp')) {
 const main = async () => {
   const browser = await puppeteer.launch({
     headless: isProduction,
+    args: isProduction ? ['--no-sandbox'] : [],
   });
 
   for (const module of MODULES) {
