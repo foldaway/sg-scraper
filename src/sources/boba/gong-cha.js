@@ -9,7 +9,7 @@ import autoLocation from '../../util/auto-location.js';
 export default async function gongCha(browser) {
   const page = await browser.newPage();
   await page.goto('http://www.gong-cha-sg.com/stores/');
-  await page.waitForSelector('.item', { timeout: 5000 });
+  await page.waitForSelector('.item', { timeout: 15000 });
   const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.item')];
 
