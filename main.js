@@ -18,7 +18,9 @@ const main = async () => {
   for (const module of MODULES) {
     console.log(`[MODULE] ${module}`);
     const filename = path.join('temp', `${module}.json`);
-    fs.unlinkSync(filename);
+    if (fs.existsSync(filename)) {
+      fs.unlinkSync(filename);
+    }
     const data = [];
     const dataSources = Object.keys(module)
       .filter((key) => key !== 'toString');
