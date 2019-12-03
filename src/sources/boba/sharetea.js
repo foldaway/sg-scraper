@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -38,5 +40,5 @@ export default async function sharetea(browser) {
     items.push(outlet);
   }
 
-  return items;
+  return Promise.map(items, autoLocation, { concurrency: 1 });
 }

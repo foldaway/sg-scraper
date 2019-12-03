@@ -1,4 +1,6 @@
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -7,7 +9,7 @@ import './model.js';
 export default async function blackball(browser) {
   const page = await browser.newPage();
   await page.goto('http://blackball.com.sg/index.php/outlet-location/');
-  return page.evaluate(() => {
+  const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.location')];
 
     return items.map((item) => ({
@@ -17,4 +19,5 @@ export default async function blackball(browser) {
       chain: 'BlackBall',
     }));
   });
+  return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }

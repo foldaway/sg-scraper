@@ -1,4 +1,6 @@
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -7,7 +9,7 @@ import './model.js';
 export default async function koi(browser) {
   const page = await browser.newPage();
   await page.goto('https://www.koithe.com/en/global/koi-singapore');
-  return page.evaluate(() => {
+  const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.global-wrap .item')];
 
     return items.map((item) => ({
@@ -18,4 +20,6 @@ export default async function koi(browser) {
       chain: 'Koi',
     }));
   });
+
+  return Promise.map(outlets, autoLocation, { concurrency: 1});
 }

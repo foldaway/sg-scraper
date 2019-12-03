@@ -1,4 +1,6 @@
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -8,7 +10,7 @@ export default async function ocbc(browser) {
   const page = await browser.newPage();
   await page.goto('https://www.ocbc.com/personal-banking/locate-us.html');
   await page.waitForSelector('#tab2', { timeout: 5000 });
-  return page.evaluate(() => {
+  const atms = await page.evaluate(() => {
     const listViewButton = document.querySelector('#tab2');
     listViewButton.scrollIntoView();
     listViewButton.click();
@@ -24,4 +26,6 @@ export default async function ocbc(browser) {
       };
     });
   });
+
+  return Promise.map(atms, autoLocation, { concurrency: 1 });
 }

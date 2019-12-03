@@ -1,4 +1,6 @@
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -8,7 +10,7 @@ export default async function gongCha(browser) {
   const page = await browser.newPage();
   await page.goto('http://www.gong-cha-sg.com/stores/');
   await page.waitForSelector('.item', { timeout: 5000 });
-  return page.evaluate(() => {
+  const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.item')];
 
     return items.map((item) => ({
@@ -18,4 +20,6 @@ export default async function gongCha(browser) {
       chain: 'Gong Cha',
     }));
   });
+
+  return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }

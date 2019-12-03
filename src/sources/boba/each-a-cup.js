@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 const REGIONS = [
   'Central',
@@ -17,7 +19,7 @@ const TITLE_REGEX = new RegExp(/\(([\w\s]*)\)/);
  */
 export default async function eachACup(browser) {
   const page = await browser.newPage();
-  const data = [];
+  const outlets = [];
   for (const region of REGIONS) {
     await page.goto(`http://www.each-a-cup.com/home/outlets/${region}`);
     await page.waitForSelector('.service-item', { timeout: 5000 });
@@ -32,8 +34,8 @@ export default async function eachACup(browser) {
         chain: 'Each-A-Cup',
       }));
     });
-    data.push(...results);
+    outlets.push(...results);
   }
 
-  return data;
+  return Promise.map(outlets, autoLocation, { concurrency: 1 });
 }

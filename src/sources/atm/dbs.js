@@ -1,4 +1,6 @@
+import Promise from 'bluebird';
 import './model.js';
+import autoLocation from '../../util/auto-location.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
@@ -22,7 +24,7 @@ export default async function dbs(browser) {
 
   await page.waitForSelector('.address', { timeout: 5000 });
 
-  return page.evaluate(async () => {
+  const atms = await page.evaluate(async () => {
     const pageNumbers = [...document.querySelectorAll('.navnum')];
     return pageNumbers.map((pageNumElement) => {
       pageNumElement.click();
@@ -41,4 +43,6 @@ export default async function dbs(browser) {
       });
     }).reduce((a, b) => a.concat(b)); // flatten 2D array
   });
+
+  return Promise.map(atms, autoLocation, { concurrency: 1 });
 }
