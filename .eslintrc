@@ -9,6 +9,8 @@
   "rules": {
     "import/extensions": "off",
     "no-console": "off",
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off"
   }
 }
