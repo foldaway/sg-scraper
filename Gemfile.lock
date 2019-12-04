@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dpl (1.10.14)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dpl (~> 1.10)
+
+BUNDLED WITH
+   2.0.2
