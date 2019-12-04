@@ -12,7 +12,7 @@ export default async function koi(browser) {
   const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.global-wrap .item')];
 
-    return items.map((item) => ({
+    return items.map(item => ({
       title: item.querySelector('.titlebox').textContent.trim(),
       address: item.querySelector('.txt a').textContent.trim(),
       phone: item.querySelector('.titlebox').textContent.trim(),
@@ -22,5 +22,5 @@ export default async function koi(browser) {
   });
 
   await page.close();
-  return Promise.map(outlets, autoLocation, { concurrency: 1});
+  return Promise.map(outlets, autoLocation, {concurrency: 1});
 }

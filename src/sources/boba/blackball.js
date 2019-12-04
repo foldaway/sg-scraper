@@ -12,7 +12,7 @@ export default async function blackball(browser) {
   const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.location')];
 
-    return items.map((item) => ({
+    return items.map(item => ({
       title: item.querySelector('.location-title-pro').textContent.trim(),
       address: item.querySelector('.location-address-pro').textContent.trim(),
       openingHours: item.querySelector('.location-time-pro').textContent.trim(),
@@ -20,5 +20,5 @@ export default async function blackball(browser) {
     }));
   });
   await page.close();
-  return Promise.map(outlets, autoLocation, { concurrency: 1 });
+  return Promise.map(outlets, autoLocation, {concurrency: 1});
 }

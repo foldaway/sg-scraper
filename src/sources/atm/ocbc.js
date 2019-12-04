@@ -9,14 +9,14 @@ import autoLocation from '../../util/auto-location.js';
 export default async function ocbc(browser) {
   const page = await browser.newPage();
   await page.goto('https://www.ocbc.com/personal-banking/locate-us.html');
-  await page.waitForSelector('#tab2', { timeout: 5000 });
+  await page.waitForSelector('#tab2', {timeout: 5000});
   const atms = await page.evaluate(() => {
     const listViewButton = document.querySelector('#tab2');
     listViewButton.scrollIntoView();
     listViewButton.click();
     const items = [...document.querySelectorAll('.address-column')];
 
-    return items.map((item) => {
+    return items.map(item => {
       const location = item.querySelector('font').textContent.trim();
       return {
         location,
@@ -28,5 +28,5 @@ export default async function ocbc(browser) {
   });
 
   await page.close();
-  return Promise.map(atms, autoLocation, { concurrency: 1 });
+  return Promise.map(atms, autoLocation, {concurrency: 1});
 }

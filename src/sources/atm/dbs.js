@@ -9,8 +9,8 @@ import autoLocation from '../../util/auto-location.js';
 export default async function dbs(browser) {
   const page = await browser.newPage();
   await page.goto('https://www.dbs.com.sg/index/locator.page');
-  await page.waitForSelector('.jspContainer', { timeout: 5000 });
-  await page.waitForSelector('#selectBranch', { timeout: 5000 });
+  await page.waitForSelector('.jspContainer', {timeout: 5000});
+  await page.waitForSelector('#selectBranch', {timeout: 5000});
 
   // Filter to ATM
   await page.evaluate(() => {
@@ -22,28 +22,32 @@ export default async function dbs(browser) {
     document.querySelector('#listClose').click();
   });
 
-  await page.waitForSelector('.address', { timeout: 5000 });
+  await page.waitForSelector('.address', {timeout: 5000});
 
   const atms = await page.evaluate(async () => {
     const pageNumbers = [...document.querySelectorAll('.navnum')];
-    return pageNumbers.map((pageNumElement) => {
-      pageNumElement.click();
-      return [...document.querySelectorAll('div.store')].map((item) => {
-        item.scrollIntoView();
+    return pageNumbers
+      .map(pageNumElement => {
+        pageNumElement.click();
+        return [...document.querySelectorAll('div.store')].map(item => {
+          item.scrollIntoView();
 
-        const address = item.querySelector('.address');
-        const postalCode = item.querySelector('.postal_code');
+          const address = item.querySelector('.address');
+          const postalCode = item.querySelector('.postal_code');
 
-        return {
-          location: item.querySelector('.title').textContent.trim(),
-          address: `${address ? address.textContent.trim() : ''}\n${postalCode ? item.querySelector('.postal_code').textContent.trim() : ''}`,
-          openingHours: '24/7',
-          bank: 'DBS',
-        };
-      });
-    }).reduce((a, b) => a.concat(b)); // flatten 2D array
+          return {
+            location: item.querySelector('.title').textContent.trim(),
+            address: `${address ? address.textContent.trim() : ''}\n${
+              postalCode ? item.querySelector('.postal_code').textContent.trim() : ''
+            }`,
+            openingHours: '24/7',
+            bank: 'DBS',
+          };
+        });
+      })
+      .reduce((a, b) => a.concat(b)); // flatten 2D array
   });
 
   await page.close();
-  return Promise.map(atms, autoLocation, { concurrency: 1 });
+  return Promise.map(atms, autoLocation, {concurrency: 1});
 }

@@ -11,11 +11,17 @@ import autoLocation from '../../util/auto-location.js';
 export default async function sharetea(browser) {
   const page = await browser.newPage();
   await page.goto('http://www.1992sharetea.com/locations');
-  await page.waitForSelector('.fr-box', { timeout: 5000 });
+  await page.waitForSelector('.fr-box', {timeout: 5000});
 
   const urls = await page.evaluate(() => {
     const items = [];
-    const xPathResult = document.evaluate('//*[contains(text(), \'Singapore\')]/../../p/a', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+    const xPathResult = document.evaluate(
+      "//*[contains(text(), 'Singapore')]/../../p/a",
+      document,
+      null,
+      XPathResult.ORDERED_NODE_ITERATOR_TYPE,
+      null
+    );
     let node = xPathResult.iterateNext();
     while (node) {
       items.push(node);
@@ -23,8 +29,8 @@ export default async function sharetea(browser) {
     }
 
     return items
-      .filter((item) => item.offsetHeight !== 0) // Filter out weird hidden outlet
-      .map((item) => item.getAttribute('href'));
+      .filter(item => item.offsetHeight !== 0) // Filter out weird hidden outlet
+      .map(item => item.getAttribute('href'));
   });
 
   const items = [];
@@ -32,7 +38,9 @@ export default async function sharetea(browser) {
   for (const url of urls) {
     await page.goto(url);
     const outlet = await page.evaluate(() => ({
-      title: document.querySelector('.wpsl-locations-details > span:first-child').textContent.trim(),
+      title: document
+        .querySelector('.wpsl-locations-details > span:first-child')
+        .textContent.trim(),
       address: document.querySelector('.wpsl-location-address').textContent.trim(),
       openingHours: document.querySelector('.wpsl-opening-hours').textContent.trim(),
       chain: 'ShareTea',
@@ -41,5 +49,5 @@ export default async function sharetea(browser) {
   }
 
   await page.close();
-  return Promise.map(items, autoLocation, { concurrency: 1 });
+  return Promise.map(items, autoLocation, {concurrency: 1});
 }

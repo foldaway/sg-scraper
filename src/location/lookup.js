@@ -1,5 +1,5 @@
 import redis from 'redis';
-import { promisify } from 'util';
+import {promisify} from 'util';
 import search from '../onemap/onemap.js';
 
 /**
@@ -15,7 +15,7 @@ export default async function lookupLocation(rawText) {
   const setA = promisify(client.set).bind(client);
   const quitA = promisify(client.quit).bind(client);
 
-  const results = await existsA(rawText)
+  const results = (await existsA(rawText))
     ? JSON.parse(await getA(rawText))
     : await search(rawText);
   await setA(rawText, JSON.stringify(results));

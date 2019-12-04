@@ -5,11 +5,12 @@ import MODULES from './modules.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const MODULES_DATA_SOURCES = MODULES
-  .map((module) => Object.keys(module)
-    .filter((dataSource) => dataSource !== 'toString')
-    .map((dataSource) => `${module}.${dataSource}`)
-    .join(','));
+const MODULES_DATA_SOURCES = MODULES.map(module =>
+  Object.keys(module)
+    .filter(dataSource => dataSource !== 'toString')
+    .map(dataSource => `${module}.${dataSource}`)
+    .join(',')
+);
 
 console.log(`
 sg-scraper dev mode
@@ -33,7 +34,7 @@ const dev = async () => {
   });
 
   const interpreter = repl.start();
-  interpreter.setupHistory('.dev_repl_history', (err) => {
+  interpreter.setupHistory('.dev_repl_history', err => {
     if (err) {
       console.error(err);
       process.exit(1);

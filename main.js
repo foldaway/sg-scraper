@@ -4,7 +4,7 @@ import Promise from 'bluebird';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
-import { spawnSync } from 'child_process';
+import {spawnSync} from 'child_process';
 import puppeteer from 'puppeteer';
 import Sentry from '@sentry/node';
 import MODULES from './modules.js';
@@ -34,8 +34,7 @@ const main = async () => {
       fs.unlinkSync(filename);
     }
     const data = [];
-    const dataSources = Object.keys(module)
-      .filter((key) => key !== 'toString');
+    const dataSources = Object.keys(module).filter(key => key !== 'toString');
     for (const dataSource of dataSources) {
       try {
         const results = await module[dataSource](browser);
@@ -45,26 +44,32 @@ const main = async () => {
         console.error(`[DATA SOURCE] '${dataSource}'`, e);
 
         const pages = await browser.pages();
-        const pageTitles = await Promise.map(pages, async (page) => page.title());
+        const pageTitles = await Promise.map(pages, async page => page.title());
         let screenshots = null;
         if (process.env.IMGBB_API_KEY) {
-          screenshots = await Promise.map(pages, async (page) => {
-            const screenshot = await page.screenshot({ encoding: 'base64' }); // base64
-            const resp = await axios.post(
-              `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-              `image=${encodeURIComponent(screenshot)}&name=${encodeURIComponent(`${module}-${dataSource}`)}`,
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                responseType: 'json',
-              },
-            );
-            return resp.data.data.url_viewer;
-          }, { concurrency: 1 });
+          screenshots = await Promise.map(
+            pages,
+            async page => {
+              const screenshot = await page.screenshot({encoding: 'base64'}); // base64
+              const resp = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+                `image=${encodeURIComponent(screenshot)}&name=${encodeURIComponent(
+                  `${module}-${dataSource}`
+                )}`,
+                {
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  responseType: 'json',
+                }
+              );
+              return resp.data.data.url_viewer;
+            },
+            {concurrency: 1}
+          );
         }
         // eslint-disable-next-line func-names, prefer-arrow-callback
-        Sentry.configureScope(function (scope) {
+        Sentry.configureScope(function(scope) {
           scope.setExtras(Object.fromEntries(pages.map((_, i) => [pageTitles[i], screenshots[i]])));
           Sentry.captureException(e);
         });
@@ -76,7 +81,9 @@ const main = async () => {
   await browser.close();
 
   if (process.env.GITHUB_TOKEN) {
-    spawnSync(`dpl --provider=pages --committer-from-gh --github-token=${process.env.GITHUB_TOKEN} --repo=${process.env.GITHUB_REPO} --local-dir=temp`);
+    spawnSync(
+      `dpl --provider=pages --committer-from-gh --github-token=${process.env.GITHUB_TOKEN} --repo=${process.env.GITHUB_REPO} --local-dir=temp`
+    );
   }
 
   Sentry.flush();

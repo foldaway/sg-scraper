@@ -14,9 +14,8 @@ export default async function search(term) {
     getAddrDetails: 'N',
     pageNum: '1',
   };
-  const response = await axios.get(
-    `${BASE_URL}/commonapi/search?${querystring.stringify(query)}`,
-    { responseType: 'json' },
-  );
+  const response = await axios.get(`${BASE_URL}/commonapi/search?${querystring.stringify(query)}`, {
+    responseType: 'json',
+  });
   return response.data;
 }

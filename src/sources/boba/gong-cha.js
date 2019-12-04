@@ -9,11 +9,11 @@ import autoLocation from '../../util/auto-location.js';
 export default async function gongCha(browser) {
   const page = await browser.newPage();
   await page.goto('http://www.gong-cha-sg.com/stores/');
-  await page.waitForSelector('.item', { timeout: 15000 });
+  await page.waitForSelector('.item', {timeout: 15000});
   const outlets = await page.evaluate(() => {
     const items = [...document.querySelectorAll('.item')];
 
-    return items.map((item) => ({
+    return items.map(item => ({
       title: item.querySelector('.p-title').textContent,
       address: item.querySelector('.p-area').textContent,
       openingHours: item.querySelector('.p-time').textContent,
@@ -22,5 +22,5 @@ export default async function gongCha(browser) {
   });
 
   await page.close();
-  return Promise.map(outlets, autoLocation, { concurrency: 1 });
+  return Promise.map(outlets, autoLocation, {concurrency: 1});
 }
