@@ -81,9 +81,16 @@ const main = async () => {
   await browser.close();
 
   if (process.env.GITHUB_TOKEN) {
-    spawnSync(
-      `dpl --provider=pages --committer-from-gh --github-token=${process.env.GITHUB_TOKEN} --repo=${process.env.GITHUB_REPO} --local-dir=temp`
+    const deployProcess = spawnSync(
+      'dpl',
+      '--provider=pages',
+      '--committer-from-gh',
+      `--github-token=${process.env.GITHUB_TOKEN}`,
+      `--repo=${process.env.GITHUB_REPO}`,
+      `--local-dir=temp`
     );
+    deployProcess.stdout = process.stdout;
+    deployProcess.stderr = process.stderr;
   }
 
   Sentry.flush();
