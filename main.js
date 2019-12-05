@@ -81,16 +81,19 @@ const main = async () => {
   await browser.close();
 
   if (process.env.GITHUB_TOKEN) {
-    const deployProcess = spawnSync(
+    spawnSync(
       'dpl',
-      '--provider=pages',
-      '--committer-from-gh',
-      `--github-token=${process.env.GITHUB_TOKEN}`,
-      `--repo=${process.env.GITHUB_REPO}`,
-      `--local-dir=temp`
+      [
+        '--provider=pages',
+        '--committer-from-gh',
+        `--github-token=${process.env.GITHUB_TOKEN}`,
+        `--repo=${process.env.GITHUB_REPO}`,
+        `--local-dir=temp`,
+      ],
+      {
+        stdio: 'inherit',
+      }
     );
-    deployProcess.stdout = process.stdout;
-    deployProcess.stderr = process.stderr;
   }
 
   Sentry.flush();
