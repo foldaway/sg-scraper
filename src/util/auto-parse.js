@@ -4,9 +4,8 @@
  */
 
 /**
- * @callback ChildShapeKeyFunction
- * @param {HTMLElement} element
- * @returns undefined
+ * @callback QueryShapeProcessFunction
+ * @param {string}
  */
 
 /**
@@ -18,7 +17,7 @@
 
 /**
  * @typedef Step
- * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateState')} type
+ * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateState')} type
  * @property {string|IteratorTargetFunction} selector DOM selector
  *
  * (optional id)
@@ -38,8 +37,8 @@
  * @property {Step} [parent] parent step
  * @property {string} collectionId key to an collection in the state object
  *
- * elementQuery
- * @ property {Object.<string, string|ChildShapeKeyFunction|Promise<HTMLElement>>} [childShape]
+ * elementQueryShape
+ * @property {Object.<string, string>|[Object.<string, string>, QueryShapeProcessFunction]} [queryShape]
  */
 
 const isString = obj => typeof obj === 'string';
@@ -82,9 +81,11 @@ export default async function autoParse(browser, steps) {
       collectionId,
       func,
       url,
+      queryShape,
     } = step;
 
     const iteratorResults = [];
+    let elementQueryShapeResult = {};
 
     switch (type) {
       case 'navigate':
@@ -121,7 +122,34 @@ export default async function autoParse(browser, steps) {
         break;
       case 'elementsQuery':
         return Object.assign(state, {
-          [id]: await page.$$(selector),
+          [id]: await (iteratee || page).$$(selector),
+        });
+      case 'elementQueryShape':
+        for (const key of Object.keys(queryShape)) {
+          const value = queryShape[key];
+          switch (true) {
+            case isString(value):
+              elementQueryShapeResult[key] = await page.evaluate(
+                (elem, sel) => elem.querySelector(sel).textContent.trim(),
+                iteratee || page,
+                value
+              );
+              break;
+            case Array.isArray(value):
+              elementQueryShapeResult[key] = await page.evaluate(
+                (elem, sel) => elem.querySelector(sel).textContent.trim(),
+                iteratee || page,
+                value[0]
+              );
+              elementQueryShapeResult[key] = value[1](elementQueryShapeResult[key]);
+              break;
+            default:
+              console.error('Unexpected queryShape value type at key:', key);
+              break;
+          }
+        }
+        return Object.assign(state, {
+          [id]: elementQueryShapeResult,
         });
       case 'evaluatePage':
         return Object.assign(state, {
