@@ -18,7 +18,7 @@
 
 /**
  * @typedef Step
- * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'iterator'|'evaluatePage'|'mutateState')} type
+ * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateState')} type
  * @property {string|IteratorTargetFunction} selector DOM selector
  *
  * (optional id)
@@ -109,6 +109,15 @@ export default async function autoParse(browser, steps) {
         break;
       case 'elementWait':
         await page.waitForSelector(selector, {visible: true, timeout});
+        break;
+      case 'elementScrollIntoView':
+        await page.evaluate(arg => {
+          if (arg instanceof HTMLElement) {
+            arg.scrollIntoView();
+          } else {
+            document.querySelector(arg).scrollIntoView();
+          }
+        }, selector || iteratee);
         break;
       case 'elementsQuery':
         return Object.assign(state, {
