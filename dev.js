@@ -31,6 +31,7 @@ Example usage: await boba.gongCha(browser)
 const dev = async () => {
   const browser = await puppeteer.launch({
     headless: isProduction,
+    defaultViewport: null,
   });
 
   const interpreter = repl.start();
