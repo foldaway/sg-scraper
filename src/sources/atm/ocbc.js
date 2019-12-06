@@ -43,19 +43,15 @@ export default async function ocbc(browser) {
             address: ['font', location => location.match(/(\d{6})/)[0]],
           },
         },
-        {
-          type: 'mutateState',
-          mutateFunc: state =>
-            Object.assign(state, {
-              atm: Object.assign(state.atm, {
-                openingHours: '24/7',
-                bank: 'OCBC',
-              }),
-            }),
-        },
       ],
     },
   ]);
 
-  return Promise.map(atms, ({atm}) => autoLocation(atm), {concurrency: 1});
+  const data = atms.map(({atm}) =>
+    Object.assign(atm, {
+      openingHours: '24/7',
+      bank: 'OCBC',
+    })
+  );
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
