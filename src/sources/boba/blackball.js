@@ -35,5 +35,7 @@ export default async function blackball(browser) {
       ],
     },
   ]);
-  return Promise.map(outlets, ({outlet}) => autoLocation(outlet), {concurrency: 1});
+
+  const data = outlets.map(({outlet}) => Object.assign(outlet, {chain: 'Blackball'}));
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
