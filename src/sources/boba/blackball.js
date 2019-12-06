@@ -25,12 +25,12 @@ export default async function blackball(browser) {
       childSteps: [
         {
           id: 'outlet',
-          type: 'evaluatePage',
-          evaluateFunc: location => ({
-            title: location.querySelector('.location-title-pro').textContent.trim(),
-            address: location.querySelector('.location-address-pro').textContent.trim(),
-            openingHours: location.querySelector('.location-time-pro').textContent.trim(),
-          }),
+          type: 'elementQueryShape',
+          queryShape: {
+            title: '.location-title-pro',
+            address: '.location-address-pro',
+            openingHours: '.location-time-pro',
+          },
         },
       ],
     },
