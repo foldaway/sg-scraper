@@ -33,18 +33,11 @@ export default async function koi(browser) {
             openingHours: '.txt',
           },
         },
-        {
-          type: 'mutateState',
-          mutateFunc: state =>
-            Object.assign(state, {
-              outlet: Object.assign(state.outlet, {
-                chain: 'KOI',
-              }),
-            }),
-        },
       ],
     },
   ]);
 
-  return Promise.map(outlets, ({outlet}) => autoLocation(outlet), {concurrency: 1});
+  const data = outlets.map(({outlet}) => Object.assign(outlet, {chain: 'KOI'}));
+
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
