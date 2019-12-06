@@ -40,6 +40,9 @@
  * @property {Step} [parent] parent step
  * @property {string} collectionId key to an collection in the state object
  *
+ * elementsQuery
+ * @property {boolean} [ignoreIteratee] whether to ignore the iteratee to query
+ *
  * elementQueryShape
  * @property {Object.<string, string>|[Object.<string, string>, QueryShapeProcessFunction]} [queryShape]
  */
@@ -86,6 +89,7 @@ export default async function autoParse(browser, steps) {
       mutateFunc,
       url,
       queryShape,
+      ignoreIteratee,
     } = step;
 
     const iteratorResults = [];
@@ -126,7 +130,7 @@ export default async function autoParse(browser, steps) {
         break;
       case 'elementsQuery':
         return Object.assign(state, {
-          [id]: await (iteratee || page).$$(selector),
+          [id]: await ((!ignoreIteratee && iteratee) || page).$$(selector),
         });
       case 'elementQueryShape':
         for (const key of Object.keys(queryShape)) {
