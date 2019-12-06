@@ -85,7 +85,7 @@ export default async function autoParse(browser, steps) {
     } = step;
 
     const iteratorResults = [];
-    let elementQueryShapeResult = {};
+    const elementQueryShapeResult = {};
 
     switch (type) {
       case 'navigate':
