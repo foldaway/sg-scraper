@@ -89,19 +89,8 @@ export default async function dbs(browser) {
                 postalCode: '.postal_code',
               },
             },
-            {
-              type: 'mutateState',
-              mutateFunc: state =>
-                Object.assign(state, {
-                  atm: Object.assign(state.atm, {
-                    address: `${state.atm.address}\n${state.atm.postalCode || ''}`,
-                    openingHours: '24/7',
-                    bank: 'DBS',
-                  }),
-                }),
-            },
           ],
-        }
+        },
       ],
     },
     {
@@ -113,5 +102,14 @@ export default async function dbs(browser) {
     },
   ]);
 
-  return Promise.map(atms, ({atm}) => autoLocation(atm), {concurrency: 1});
+  const data = atms
+    .map(({atm}) =>
+      Object.assign(atm, {
+        address: `${atm.address}\n${atm.postalCode || ''}`,
+        openingHours: '24/7',
+        bank: 'DBS',
+      })
+    )
+    .map(({postalCode, ...fields}) => ({...fields}));
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
