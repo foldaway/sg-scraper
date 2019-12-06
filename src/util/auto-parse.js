@@ -30,7 +30,10 @@
  * @property {string|EvaluateFunction} [url]
  *
  * evaluate
- * @property {EvaluateFunction} [func]
+ * @property {EvaluateFunction} [evaluateFunc]
+ *
+ * mutateState
+ * @property {EvaluateFunction} [mutateFunc]
  *
  * iterator
  * @property {Step[]} [childSteps]
@@ -79,7 +82,8 @@ export default async function autoParse(browser, steps) {
       timeout = 5000,
       childSteps,
       collectionId,
-      func,
+      evaluateFunc,
+      mutateFunc,
       url,
       queryShape,
     } = step;
@@ -153,7 +157,7 @@ export default async function autoParse(browser, steps) {
         });
       case 'evaluatePage':
         return Object.assign(state, {
-          [id]: await page.evaluate(func, iteratee),
+          [id]: await page.evaluate(evaluateFunc, iteratee),
         });
       case 'iterator':
         if (!(collectionId in state)) {
@@ -172,7 +176,7 @@ export default async function autoParse(browser, steps) {
           [id]: iteratorResults,
         });
       case 'mutateState':
-        return Object.assign(state, await func(state));
+        return Object.assign(state, await mutateFunc(state));
       default:
         console.error('Unknown step type', type);
         break;

@@ -45,7 +45,7 @@ export default async function ocbc(browser) {
         },
         {
           type: 'mutateState',
-          func: state =>
+          mutateFunc: state =>
             Object.assign(state, {
               atm: Object.assign(state.atm, {
                 openingHours: '24/7',

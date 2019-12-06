@@ -26,7 +26,7 @@ export default async function blackball(browser) {
         {
           id: 'outlet',
           type: 'evaluatePage',
-          func: location => ({
+          evaluateFunc: location => ({
             title: location.querySelector('.location-title-pro').textContent.trim(),
             address: location.querySelector('.location-address-pro').textContent.trim(),
             openingHours: location.querySelector('.location-time-pro').textContent.trim(),

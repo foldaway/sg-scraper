@@ -79,7 +79,7 @@ export default async function dbs(browser) {
             {
               id: 'atm',
               type: 'evaluatePage',
-              func: iteratee => {
+              evaluateFunc: iteratee => {
                 iteratee.scrollIntoView();
 
                 const address = iteratee.querySelector('.address');
@@ -101,7 +101,7 @@ export default async function dbs(browser) {
     },
     {
       type: 'mutateState',
-      func: state =>
+      mutateFunc: state =>
         Object.assign(state, {
           atms: state.atms.map(atm => atm.atmsChunk).reduce((a, b) => a.concat(b)),
         }),
