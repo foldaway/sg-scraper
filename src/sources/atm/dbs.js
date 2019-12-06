@@ -70,6 +70,7 @@ export default async function dbs(browser) {
           id: 'stores',
           type: 'elementsQuery',
           selector: 'div.store',
+          ignoreIteratee: true,
         },
         {
           id: 'atmsChunk',
@@ -77,23 +78,27 @@ export default async function dbs(browser) {
           collectionId: 'stores',
           childSteps: [
             {
+              type: 'elementScrollIntoView',
+            },
+            {
               id: 'atm',
-              type: 'evaluatePage',
-              evaluateFunc: iteratee => {
-                iteratee.scrollIntoView();
-
-                const address = iteratee.querySelector('.address');
-                const postalCode = iteratee.querySelector('.postal_code');
-
-                return {
-                  title: iteratee.querySelector('.title').textContent.trim(),
-                  address: `${address ? address.textContent.trim() : ''}\n${
-                    postalCode ? iteratee.querySelector('.postal_code').textContent.trim() : ''
-                  }`,
-                  openingHours: '24/7',
-                  bank: 'DBS',
-                };
+              type: 'elementQueryShape',
+              queryShape: {
+                title: '.title',
+                address: '.address',
+                postalCode: '.postal_code',
               },
+            },
+            {
+              type: 'mutateState',
+              mutateFunc: state =>
+                Object.assign(state, {
+                  atm: Object.assign(state.atm, {
+                    address: `${state.atm.address}\n${state.atm.postalCode || ''}`,
+                    openingHours: '24/7',
+                    bank: 'DBS',
+                  }),
+                }),
             },
           ],
         }
