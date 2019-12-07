@@ -38,7 +38,7 @@
  * @property {Step} [parent] parent step
  *
  * elementsQuery
- * @property {boolean} [ignoreIteratee] whether to ignore the iteratee to query
+ * @property {('iteratee'|'document')} [querySource] whether to ignore the iteratee to query
  *
  * elementQueryShape
  * @property {Object.<string, string>|[Object.<string, string>, QueryShapeProcessFunction]} [queryShape]
@@ -83,7 +83,7 @@ export default async function autoParse(browser, steps) {
       mutateFunc,
       url,
       queryShape,
-      ignoreIteratee,
+      querySource,
     } = step;
 
     const iteratorResults = [];
@@ -124,9 +124,9 @@ export default async function autoParse(browser, steps) {
         break;
       case 'elementsQuery':
         if (selectorType === 'xpath') {
-          return ((!ignoreIteratee && iteratee) || page).$x(selector);
+          return ((querySource === 'iteratee' && iteratee) || page).$x(selector);
         }
-        return ((!ignoreIteratee && iteratee) || page).$$(selector);
+        return ((querySource === 'iteratee' && iteratee) || page).$$(selector);
       case 'elementQueryShape':
         for (const key of Object.keys(queryShape)) {
           const value = queryShape[key];
@@ -137,7 +137,7 @@ export default async function autoParse(browser, steps) {
                   (elem || document).querySelector(sel)
                     ? (elem || document).querySelector(sel).textContent.trim()
                     : null,
-                !ignoreIteratee && iteratee,
+                querySource === 'iteratee' && iteratee,
                 value
               );
               break;
@@ -147,7 +147,7 @@ export default async function autoParse(browser, steps) {
                   (elem || document).querySelector(sel)
                     ? (elem || document).querySelector(sel).textContent.trim()
                     : null,
-                !ignoreIteratee && iteratee,
+                querySource === 'iteratee' && iteratee,
                 value[0]
               );
               elementQueryShapeResult[key] = value[1](elementQueryShapeResult[key]);

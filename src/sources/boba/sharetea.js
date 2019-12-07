@@ -40,7 +40,7 @@ export default async function sharetea(browser) {
         },
         {
           type: 'elementQueryShape',
-          ignoreIteratee: true,
+          querySource: 'document',
           queryShape: {
             title: '.wpsl-locations-details > span:first-child',
             address: '.wpsl-location-address',

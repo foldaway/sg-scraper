@@ -66,7 +66,7 @@ export default async function dbs(browser) {
         {
           type: 'elementsQuery',
           selector: 'div.store',
-          ignoreIteratee: true,
+          querySource: 'document',
         },
         {
           type: 'iterator',

@@ -30,7 +30,7 @@ export default async function eachACup(browser) {
         },
         {
           type: 'elementsQuery',
-          ignoreIteratee: true,
+          querySource: 'document',
           selector: '.service-item',
         },
         {
