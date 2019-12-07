@@ -155,7 +155,7 @@ export default async function autoParse(browser, steps) {
         }
         return elementQueryShapeResult;
       case 'evaluatePage':
-        return page.evaluate(evaluateFunc, iteratee);
+        return page.evaluate(evaluateFunc, prevResult, iteratee);
       case 'iterator':
         if (!prevResult) {
           throw new Error('prevResult is not a collection that is iterable:', prevResult);
