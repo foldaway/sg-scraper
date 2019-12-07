@@ -134,16 +134,20 @@ export default async function autoParse(browser, steps) {
             case isString(value):
               elementQueryShapeResult[key] = await page.evaluate(
                 (elem, sel) =>
-                  elem.querySelector(sel) ? elem.querySelector(sel).textContent.trim() : null,
-                iteratee || page,
+                  (elem || document).querySelector(sel)
+                    ? (elem || document).querySelector(sel).textContent.trim()
+                    : null,
+                !ignoreIteratee && iteratee,
                 value
               );
               break;
             case Array.isArray(value):
               elementQueryShapeResult[key] = await page.evaluate(
                 (elem, sel) =>
-                  elem.querySelector(sel) ? elem.querySelector(sel).textContent.trim() : null,
-                iteratee || page,
+                  (elem || document).querySelector(sel)
+                    ? (elem || document).querySelector(sel).textContent.trim()
+                    : null,
+                !ignoreIteratee && iteratee,
                 value[0]
               );
               elementQueryShapeResult[key] = value[1](elementQueryShapeResult[key]);
