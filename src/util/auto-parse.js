@@ -18,7 +18,7 @@
 /**
  * @typedef Step
  * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateResult')} type
- * @property {string|IteratorTargetFunction} selector DOM selector
+ * @property {string} selector DOM selector
  * @property {('css'|'xpath')} selectorType type of the selector
  *
  * elementWait
