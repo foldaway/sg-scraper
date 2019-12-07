@@ -8,7 +8,7 @@ import autoParse from '../../util/auto-parse.js';
  * @returns {Promise<Boba[]>}
  */
 export default async function gongCha(browser) {
-  const {outlets} = await autoParse(browser, [
+  const outlets = await autoParse(browser, [
     {
       type: 'navigate',
       url: 'http://www.gong-cha-sg.com/stores/',
@@ -19,17 +19,13 @@ export default async function gongCha(browser) {
       timeout: 15000,
     },
     {
-      id: 'items',
       type: 'elementsQuery',
       selector: '.item',
     },
     {
-      id: 'outlets',
       type: 'iterator',
-      collectionId: 'items',
       childSteps: [
         {
-          id: 'outlet',
           type: 'elementQueryShape',
           queryShape: {
             title: '.p-title',
@@ -41,7 +37,7 @@ export default async function gongCha(browser) {
     },
   ]);
 
-  const data = outlets.map(({outlet}) =>
+  const data = outlets.map(outlet =>
     Object.assign(outlet, {
       chain: 'Gong Cha',
     })

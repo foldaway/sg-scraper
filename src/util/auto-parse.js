@@ -29,7 +29,7 @@
  * evaluate
  * @property {EvaluateFunction} [evaluateFunc]
  *
- * mutateState
+ * mutateResult
  * @property {EvaluateFunction} [mutateFunc]
  *
  * iterator

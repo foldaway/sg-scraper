@@ -8,23 +8,19 @@ import autoParse from '../../util/auto-parse.js';
  * @returns {Promise<Boba[]>}
  */
 export default async function blackball(browser) {
-  const {outlets} = await autoParse(browser, [
+  const outlets = await autoParse(browser, [
     {
       type: 'navigate',
       url: 'http://blackball.com.sg/index.php/outlet-location/',
     },
     {
-      id: 'locations',
       type: 'elementsQuery',
       selector: '.location',
     },
     {
-      id: 'outlets',
       type: 'iterator',
-      collectionId: 'locations',
       childSteps: [
         {
-          id: 'outlet',
           type: 'elementQueryShape',
           queryShape: {
             title: '.location-title-pro',
@@ -36,6 +32,6 @@ export default async function blackball(browser) {
     },
   ]);
 
-  const data = outlets.map(({outlet}) => Object.assign(outlet, {chain: 'Blackball'}));
+  const data = outlets.map(outlet => Object.assign(outlet, {chain: 'Blackball'}));
   return Promise.map(data, autoLocation, {concurrency: 1});
 }

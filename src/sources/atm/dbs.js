@@ -8,7 +8,7 @@ import autoParse from '../../util/auto-parse.js';
  * @returns {Promise<Boba[]>}
  */
 export default async function dbs(browser) {
-  const {atms} = await autoParse(browser, [
+  const atms = await autoParse(browser, [
     {
       type: 'navigate',
       url: 'https://www.dbs.com.sg/index/locator.page',
@@ -50,14 +50,11 @@ export default async function dbs(browser) {
       selector: '.address',
     },
     {
-      id: 'pageNumbers',
       type: 'elementsQuery',
       selector: '.navnum',
     },
     {
-      id: 'atms',
       type: 'iterator',
-      collectionId: 'pageNumbers',
       childSteps: [
         {
           type: 'elementClick',
@@ -67,21 +64,17 @@ export default async function dbs(browser) {
           selector: 'div.store',
         },
         {
-          id: 'stores',
           type: 'elementsQuery',
           selector: 'div.store',
           ignoreIteratee: true,
         },
         {
-          id: 'atmsChunk',
           type: 'iterator',
-          collectionId: 'stores',
           childSteps: [
             {
               type: 'elementScrollIntoView',
             },
             {
-              id: 'atm',
               type: 'elementQueryShape',
               queryShape: {
                 title: '.title',
@@ -93,17 +86,11 @@ export default async function dbs(browser) {
         },
       ],
     },
-    {
-      type: 'mutateState',
-      mutateFunc: state =>
-        Object.assign(state, {
-          atms: state.atms.map(atm => atm.atmsChunk).reduce((a, b) => a.concat(b)),
-        }),
-    },
   ]);
 
   const data = atms
-    .map(({atm}) =>
+    .flat()
+    .map(atm =>
       Object.assign(atm, {
         address: `${atm.address}\n${atm.postalCode || ''}`,
         openingHours: '24/7',

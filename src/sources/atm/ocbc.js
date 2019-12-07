@@ -8,7 +8,7 @@ import autoParse from '../../util/auto-parse.js';
  * @returns {Promise<Boba[]>}
  */
 export default async function ocbc(browser) {
-  const {atms} = await autoParse(browser, [
+  const atms = await autoParse(browser, [
     {
       type: 'navigate',
       url: 'https://www.ocbc.com/personal-banking/locate-us.html',
@@ -26,17 +26,13 @@ export default async function ocbc(browser) {
       selector: '#tab2',
     },
     {
-      id: 'addressColumns',
       type: 'elementsQuery',
       selector: '.address-column',
     },
     {
-      id: 'atms',
       type: 'iterator',
-      collectionId: 'addressColumns',
       childSteps: [
         {
-          id: 'atm',
           type: 'elementQueryShape',
           queryShape: {
             title: 'font',
@@ -47,7 +43,7 @@ export default async function ocbc(browser) {
     },
   ]);
 
-  const data = atms.map(({atm}) =>
+  const data = atms.map(atm =>
     Object.assign(atm, {
       openingHours: '24/7',
       bank: 'OCBC',

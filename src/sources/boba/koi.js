@@ -8,23 +8,19 @@ import autoParse from '../../util/auto-parse.js';
  * @returns {Promise<Boba[]>}
  */
 export default async function koi(browser) {
-  const {outlets} = await autoParse(browser, [
+  const outlets = await autoParse(browser, [
     {
       type: 'navigate',
       url: 'https://www.koithe.com/en/global/koi-singapore',
     },
     {
-      id: 'items',
       type: 'elementsQuery',
       selector: '.global-wrap .item',
     },
     {
-      id: 'outlets',
       type: 'iterator',
-      collectionId: 'items',
       childSteps: [
         {
-          id: 'outlet',
           type: 'elementQueryShape',
           queryShape: {
             title: '.titlebox',
@@ -37,7 +33,7 @@ export default async function koi(browser) {
     },
   ]);
 
-  const data = outlets.map(({outlet}) => Object.assign(outlet, {chain: 'KOI'}));
+  const data = outlets.map(outlet => Object.assign(outlet, {chain: 'KOI'}));
 
   return Promise.map(data, autoLocation, {concurrency: 1});
 }
