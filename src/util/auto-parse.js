@@ -17,11 +17,8 @@
 
 /**
  * @typedef Step
- * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateState')} type
+ * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateResult')} type
  * @property {string|IteratorTargetFunction} selector DOM selector
- *
- * (optional id)
- * @property {string} [id] id string used to store data in the returned object
  *
  * elementWait
  * @property {number} [timeout] timeout for wait
@@ -38,7 +35,6 @@
  * iterator
  * @property {Step[]} [childSteps]
  * @property {Step} [parent] parent step
- * @property {string} collectionId key to an collection in the state object
  *
  * elementsQuery
  * @property {boolean} [ignoreIteratee] whether to ignore the iteratee to query
@@ -67,24 +63,20 @@ const generateRandomString = () =>
 export default async function autoParse(browser, steps) {
   const page = await browser.newPage();
 
-  let index = 0;
-
   /**
    * Process a single step
    * @param {Step} step
-   * @param {object} state state object
-   * @param {object} iteratee argument to pass to the function
-   * @returns {State} mutated state
+   * @param {?object} prevResult result of the previous step
+   * @param {object} iteratee (if this step is running as part of a parent iterator step)
+   * @returns {?object} result
    */
-  async function handleStep(step, state, iteratee = null) {
+  async function handleStep(step, prevResult, iteratee = null) {
     console.log('Step', JSON.stringify(step));
     const {
-      id = index.toString(),
       type,
       selector,
       timeout = 5000,
       childSteps,
-      collectionId,
       evaluateFunc,
       mutateFunc,
       url,
@@ -102,7 +94,7 @@ export default async function autoParse(browser, steps) {
             await page.goto(url);
             break;
           case isFunction(url):
-            await page.goto(url(state, iteratee));
+            await page.goto(url(prevResult, iteratee));
             break;
           default:
             console.error('Unexpected url key value:', url);
@@ -129,9 +121,7 @@ export default async function autoParse(browser, steps) {
         }, selector || iteratee);
         break;
       case 'elementsQuery':
-        return Object.assign(state, {
-          [id]: await ((!ignoreIteratee && iteratee) || page).$$(selector),
-        });
+        return ((!ignoreIteratee && iteratee) || page).$$(selector);
       case 'elementQueryShape':
         for (const key of Object.keys(queryShape)) {
           const value = queryShape[key];
@@ -158,45 +148,36 @@ export default async function autoParse(browser, steps) {
               break;
           }
         }
-        return Object.assign(state, {
-          [id]: elementQueryShapeResult,
-        });
+        return elementQueryShapeResult;
       case 'evaluatePage':
-        return Object.assign(state, {
-          [id]: await page.evaluate(evaluateFunc, iteratee),
-        });
+        return page.evaluate(evaluateFunc, iteratee);
       case 'iterator':
-        if (!(collectionId in state)) {
-          throw new Error(
-            `The collectionId you specified does not exist in the state: '${collectionId}'`
-          );
+        if (!prevResult) {
+          throw new Error('prevResult is not a collection that is iterable:', prevResult);
         }
-        for (const item of state[collectionId]) {
-          let tempState = {};
+        for (const item of prevResult) {
+          let tempResult = null;
           for (const childStep of childSteps) {
-            tempState = await handleStep(childStep, tempState, item);
+            tempResult = await handleStep(childStep, tempResult, item);
           }
-          iteratorResults.push(tempState);
+          iteratorResults.push(tempResult);
         }
-        return Object.assign(state, {
-          [id]: iteratorResults,
-        });
-      case 'mutateState':
-        return Object.assign(state, await mutateFunc(state));
+        return iteratorResults;
+      case 'mutateResult':
+        return mutateFunc(prevResult);
       default:
         console.error('Unknown step type', type);
         break;
     }
-    return state;
+    return null;
   }
 
-  let rootState = {};
+  let result = null;
 
   for (const step of steps) {
-    rootState = await handleStep(step, rootState);
-    index += 1;
+    result = await handleStep(step, result);
   }
   await page.close();
 
-  return rootState;
+  return result;
 }
