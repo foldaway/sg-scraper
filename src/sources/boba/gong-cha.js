@@ -1,26 +1,50 @@
 import Promise from 'bluebird';
 import './model.js';
 import autoLocation from '../../util/auto-location.js';
+import autoParse from '../../util/auto-parse.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
  * @returns {Promise<Boba[]>}
  */
 export default async function gongCha(browser) {
-  const page = await browser.newPage();
-  await page.goto('http://www.gong-cha-sg.com/stores/');
-  await page.waitForSelector('.item', {timeout: 15000});
-  const outlets = await page.evaluate(() => {
-    const items = [...document.querySelectorAll('.item')];
+  const {outlets} = await autoParse(browser, [
+    {
+      type: 'navigate',
+      url: 'http://www.gong-cha-sg.com/stores/',
+    },
+    {
+      type: 'elementWait',
+      selector: '.item',
+      timeout: 15000,
+    },
+    {
+      id: 'items',
+      type: 'elementsQuery',
+      selector: '.item',
+    },
+    {
+      id: 'outlets',
+      type: 'iterator',
+      collectionId: 'items',
+      childSteps: [
+        {
+          id: 'outlet',
+          type: 'elementQueryShape',
+          queryShape: {
+            title: '.p-title',
+            address: '.p-area',
+            openingHours: '.p-time',
+          },
+        },
+      ],
+    },
+  ]);
 
-    return items.map(item => ({
-      title: item.querySelector('.p-title').textContent,
-      address: item.querySelector('.p-area').textContent,
-      openingHours: item.querySelector('.p-time').textContent,
+  const data = outlets.map(({outlet}) =>
+    Object.assign(outlet, {
       chain: 'Gong Cha',
-    }));
-  });
-
-  await page.close();
-  return Promise.map(outlets, autoLocation, {concurrency: 1});
+    })
+  );
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
