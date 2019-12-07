@@ -20,7 +20,7 @@ export default async function sharetea(browser) {
     {
       type: 'elementsQuery',
       selector: `//*[contains(text(), 'Singapore')]/../../p/a`,
-      isXPathSelector: true,
+      selectorType: 'xpath',
     },
     {
       type: 'iterator',

@@ -19,7 +19,7 @@
  * @typedef Step
  * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateResult')} type
  * @property {string|IteratorTargetFunction} selector DOM selector
- * @property {boolean} isXPathSelector whether the selector is an XPath expression
+ * @property {('css'|'xpath')} selectorType type of the selector
  *
  * elementWait
  * @property {number} [timeout] timeout for wait
@@ -76,7 +76,7 @@ export default async function autoParse(browser, steps) {
     const {
       type,
       selector,
-      isXPathSelector = false,
+      selectorType = 'css',
       timeout = 5000,
       childSteps,
       evaluateFunc,
@@ -123,7 +123,7 @@ export default async function autoParse(browser, steps) {
         }, selector || iteratee);
         break;
       case 'elementsQuery':
-        if (isXPathSelector) {
+        if (selectorType === 'xpath') {
           return ((!ignoreIteratee && iteratee) || page).$x(selector);
         }
         return ((!ignoreIteratee && iteratee) || page).$$(selector);
