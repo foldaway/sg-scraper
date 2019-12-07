@@ -180,7 +180,12 @@ export default async function autoParse(browser, steps) {
   let result = null;
 
   for (const step of steps) {
-    result = await handleStep(step, result);
+    try {
+      result = await handleStep(step, result);
+    } catch (e) {
+      console.error('Last result before exception:', result);
+      throw e;
+    }
   }
   await page.close();
 
