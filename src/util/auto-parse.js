@@ -1,17 +1,18 @@
 /**
- * @typedef {Object<string, object>} State
- * Object that contains state for the entire steps run
- */
-
-/**
  * @callback QueryShapeProcessFunction
  * @param {string}
  */
 
 /**
  * @callback EvaluateFunction
- * @param {State} state the current state of the object to be returned. contains state from previous steps.
- * @param {object} [evaluateArg] optional argument. within an iterable this is the collection item
+ * @param {object} prevResult result of the previous step
+ * @param {object} [iteratee] iteratee (if running within a parent step)
+ */
+
+/**
+ * @callback URLEvaluateFunction
+ * @param {object} prevResult result of the previous step
+ * @param {object} [iteratee] iteratee (if running within a parent step)
  * @returns {string}
  */
 
@@ -25,7 +26,7 @@
  * @property {number} [timeout] timeout for wait
  *
  * navigate
- * @property {string|EvaluateFunction} [url]
+ * @property {string|URLEvaluateFunction} [url]
  *
  * evaluate
  * @property {EvaluateFunction} [evaluateFunc]
