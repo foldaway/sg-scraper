@@ -62,9 +62,10 @@ const generateRandomString = () =>
  * @async
  * @param {import('puppeteer').Browser} browser
  * @param {(Step)[]} steps
+ * @param {object} initialResult an initial result to pass to the first step
  * @returns {object[]}
  */
-export default async function autoParse(browser, steps) {
+export default async function autoParse(browser, steps, initialResult = null) {
   const page = await browser.newPage();
 
   /**
@@ -184,7 +185,7 @@ export default async function autoParse(browser, steps) {
     return null;
   }
 
-  let result = null;
+  let result = initialResult;
 
   for (const step of steps) {
     try {
