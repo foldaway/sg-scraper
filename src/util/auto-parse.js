@@ -82,7 +82,7 @@ export default async function autoParse(browser, steps) {
       mutateFunc,
       url,
       queryShape,
-      querySource,
+      querySource = 'iteratee', // will default to document if no iteratee
     } = step;
 
     const iteratorResults = [];
