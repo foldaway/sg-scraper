@@ -1,6 +1,7 @@
 /**
  * @callback QueryShapeProcessFunction
- * @param {string}
+ * @param {string} queriedResult
+ * @returns {string}
  */
 
 /**
@@ -19,29 +20,31 @@
 /**
  * @typedef Step
  * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateResult')} type
+ *
+ * elementClick, elementWait, elementsQuery, elementScrollIntoView
  * @property {string} selector DOM selector
  * @property {('css'|'xpath')} selectorType type of the selector
  *
  * elementWait
- * @property {number} [timeout] timeout for wait
+ * @property {number} [timeout=5000] timeout for elementWait
  *
  * navigate
- * @property {string|URLEvaluateFunction} [url]
+ * @property {string|URLEvaluateFunction} url url to navigate to
  *
  * evaluate
- * @property {EvaluateFunction} [evaluateFunc]
+ * @property {EvaluateFunction} [evaluateFunc] function to be evaluated
  *
  * mutateResult
- * @property {EvaluateFunction} [mutateFunc]
+ * @property {EvaluateFunction} [mutateFunc] function to be evaluated. this function is expected to mutate the result from the last step
  *
  * iterator
- * @property {Step[]} [childSteps]
+ * @property {Step[]} [childSteps] steps to run for each iteratee
  *
  * elementsQuery
  * @property {('iteratee'|'document')} [querySource] whether to ignore the iteratee to query
  *
  * elementQueryShape
- * @property {Object.<string, string>|[Object.<string, string>, QueryShapeProcessFunction]} [queryShape]
+ * @property {Object.<string, string|[string, QueryShapeProcessFunction]>} [queryShape] element shape to return
  */
 
 const isString = obj => typeof obj === 'string';
