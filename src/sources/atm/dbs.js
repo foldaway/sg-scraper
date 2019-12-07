@@ -36,7 +36,7 @@ export default async function dbs(browser) {
           const postalCode = item.querySelector('.postal_code');
 
           return {
-            location: item.querySelector('.title').textContent.trim(),
+            title: item.querySelector('.title').textContent.trim(),
             address: `${address ? address.textContent.trim() : ''}\n${
               postalCode ? item.querySelector('.postal_code').textContent.trim() : ''
             }`,

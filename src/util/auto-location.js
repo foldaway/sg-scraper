@@ -9,6 +9,6 @@ import postalCode from './postal-code.js';
 export default async function autoLocation(obj) {
   const addressLookup = await lookupLocation(postalCode(obj.address) || obj.address);
   return Object.assign(obj, {
-    address: addressLookup ? addressLookup.results[0] : null,
+    location: addressLookup ? addressLookup.results[0] : null,
   });
 }

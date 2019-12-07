@@ -19,7 +19,7 @@ export default async function ocbc(browser) {
     return items.map(item => {
       const location = item.querySelector('font').textContent.trim();
       return {
-        location,
+        title: location,
         address: location.match(/(\d{6})/)[0],
         openingHours: '24/7',
         bank: 'OCBC',
