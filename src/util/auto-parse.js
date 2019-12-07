@@ -35,7 +35,6 @@
  *
  * iterator
  * @property {Step[]} [childSteps]
- * @property {Step} [parent] parent step
  *
  * elementsQuery
  * @property {('iteratee'|'document')} [querySource] whether to ignore the iteratee to query
