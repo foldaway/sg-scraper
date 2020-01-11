@@ -1,35 +1,46 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 import Promise from 'bluebird';
 import './model.js';
 import autoLocation from '../../util/auto-location.js';
+import autoParse from '../../util/auto-parse.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
  * @returns {Promise<Boba[]>}
  */
 export default async function liho(browser) {
-  const page = await browser.newPage();
-  await page.goto('http://www.streetdirectory.com/businessfinder/company_branch/163304/5890/');
-  await page.waitForSelector('#company_branch_container tr[id]', {timeout: 5000});
-  const outlets = await page.evaluate(() => {
-    const items = [...document.querySelectorAll('#company_branch_container tr[id]')];
+  const outlets = await autoParse(browser, [
+    {
+      type: 'navigate',
+      url: 'http://www.streetdirectory.com/businessfinder/company_branch/163304/5890/',
+    },
+    {
+      type: 'elementWait',
+      selector: '#company_branch_container tr[id]',
+    },
+    {
+      type: 'elementsQuery',
+      selector: '#company_branch_container tr[id]',
+    },
+    {
+      type: 'iterator',
+      childSteps: [
+        {
+          type: 'elementQueryShape',
+          queryShape: {
+            title: '.company_branch_name',
+            address: '.company_branch_address',
+            phone: [
+              '.company_branch_phone',
+              result => (result ? result.replace(/^-\s?/, '') : null),
+            ],
+          },
+        },
+      ],
+    },
+  ]);
 
-    return items.map(item => ({
-      title: item.querySelector('.company_branch_name').textContent.trim(),
-      address: item.querySelector('.company_branch_address').innerText.trim(),
-      phone: item.querySelector('.company_branch_phone')
-        ? item
-            .querySelector('.company_branch_phone')
-            .textContent.trim()
-            .replace(/^-\s?/, '')
-        : null,
-      chain: 'LiHO',
-    }));
-  });
-
-  await page.close();
-  return Promise.map(outlets, autoLocation, {
+  const data = outlets.map(outlet => Object.assign(outlet, {chain: 'LiHO'}));
+  return Promise.map(data, autoLocation, {
     concurrency: 1,
   });
 }

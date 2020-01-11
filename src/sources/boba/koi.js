@@ -1,26 +1,39 @@
 import Promise from 'bluebird';
 import './model.js';
 import autoLocation from '../../util/auto-location.js';
+import autoParse from '../../util/auto-parse.js';
 
 /**
  * @param {import('puppeteer').Browser} browser
  * @returns {Promise<Boba[]>}
  */
 export default async function koi(browser) {
-  const page = await browser.newPage();
-  await page.goto('https://www.koithe.com/en/global/koi-singapore');
-  const outlets = await page.evaluate(() => {
-    const items = [...document.querySelectorAll('.global-wrap .item')];
+  const outlets = await autoParse(browser, [
+    {
+      type: 'navigate',
+      url: 'https://www.koithe.com/en/global/koi-singapore',
+    },
+    {
+      type: 'elementsQuery',
+      selector: '.global-wrap .item',
+    },
+    {
+      type: 'iterator',
+      childSteps: [
+        {
+          type: 'elementQueryShape',
+          queryShape: {
+            title: '.titlebox',
+            address: '.txt a',
+            phone: '.titlebox',
+            openingHours: '.txt',
+          },
+        },
+      ],
+    },
+  ]);
 
-    return items.map(item => ({
-      title: item.querySelector('.titlebox').textContent.trim(),
-      address: item.querySelector('.txt a').textContent.trim(),
-      phone: item.querySelector('.titlebox').textContent.trim(),
-      openingHours: item.querySelector('.txt').textContent.trim(),
-      chain: 'Koi',
-    }));
-  });
+  const data = outlets.map(outlet => Object.assign(outlet, {chain: 'KOI'}));
 
-  await page.close();
-  return Promise.map(outlets, autoLocation, {concurrency: 1});
+  return Promise.map(data, autoLocation, {concurrency: 1});
 }
