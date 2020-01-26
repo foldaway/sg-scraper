@@ -139,7 +139,7 @@ export default async function autoParse(browser, steps, initialResult = null) {
               elementQueryShapeResult[key] = await page.evaluate(
                 (elem, sel) =>
                   (elem || document).querySelector(sel)
-                    ? (elem || document).querySelector(sel).textContent.trim()
+                    ? (elem || document).querySelector(sel).textContent.trim().replace("$", "")
                     : null,
                 querySource === 'iteratee' && iteratee,
                 value
