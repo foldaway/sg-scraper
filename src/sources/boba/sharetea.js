@@ -42,7 +42,7 @@ export default async function sharetea(browser) {
           type: 'elementQueryShape',
           querySource: 'document',
           queryShape: {
-            title: '.wpsl-locations-details > span:first-child',
+            title: '.elementor-heading-title',
             address: '.wpsl-location-address',
             openingHours: '.wpsl-opening-hours',
           },
