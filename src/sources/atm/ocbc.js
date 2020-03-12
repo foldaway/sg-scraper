@@ -15,19 +15,19 @@ export default async function ocbc(browser) {
     },
     {
       type: 'elementWait',
-      selector: '#tab2',
+      selector: '#locator-atms',
     },
     {
       type: 'elementScrollIntoView',
-      selector: '#tab2',
+      selector: '#locator-atms',
     },
     {
       type: 'elementClick',
-      selector: '#tab2',
+      selector: '#locator-atms',
     },
     {
       type: 'elementsQuery',
-      selector: '.address-column',
+      selector: '.com__ll-set',
     },
     {
       type: 'iterator',
@@ -35,8 +35,8 @@ export default async function ocbc(browser) {
         {
           type: 'elementQueryShape',
           queryShape: {
-            title: 'font',
-            address: ['font', location => location.match(/(\d{6})/)[0]],
+            title: 'strong',
+            address: 'h6',
           },
         },
       ],
