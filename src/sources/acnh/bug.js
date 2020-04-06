@@ -6,12 +6,12 @@ import autoParse from '../../util/auto-parse.js';
  * @param {import('puppeteer').Browser} browser
  * @returns {<any[]>}
  */
-export default async function fish(browser) {
-  const fishes = await autoParse(browser, [
+export default async function bug(browser) {
+  const bugs = await autoParse(browser, [
     {
       type: 'navigate',
       url:
-        'https://www.polygon.com/animal-crossing-new-horizons-switch-acnh-guide/2020/3/23/21190775/fish-locations-times-month-day-list-critterpedia',
+        'https://www.polygon.com/animal-crossing-new-horizons-switch-acnh-guide/2020/3/24/21191276/insect-bug-locations-times-month-day-list-critterpedia',
     },
     {
       type: 'elementsQuery',
@@ -25,18 +25,16 @@ export default async function fish(browser) {
           queryShape: {
             name: 'td:nth-child(2)',
             location: 'td:nth-child(3)',
-            sellPrice: 'td:nth-child(5)',
-            season: 'td:nth-child(7)',
-            time: 'td:nth-child(6)',
+            sellPrice: 'td:nth-child(4)',
+            season: 'td:nth-child(6)',
+            time: 'td:nth-child(5)',
           },
         },
       ],
     },
   ]);
 
-  const data = fishes
-    .filter(fish => fish.name !== null)
-    .map(fish => Object.assign(fish, {type: 'Fish'}));
+  const data = bugs.filter(bug => bug.name !== null).map(bug => Object.assign(bug, {type: 'Bug'}));
   console.log(data);
   return data;
 }
