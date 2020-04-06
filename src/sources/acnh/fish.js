@@ -38,6 +38,7 @@ export default async function fish(browser) {
     }
   }
 
-  console.log(fishes);
-  return fishes;
+  const data = fishes.map(fish => Object.assign(fish, {type: 'Fish'}));
+  console.log(data);
+  return data;
 }
