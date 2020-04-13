@@ -13,7 +13,9 @@
     "db:migrate": "sequelize-cli db:migrate",
     "db:migrate:undo": "sequelize-cli db:migrate:undo",
     "db:migrate:status": "sequelize-cli db:migrate:status",
-    "db:drop": "sequelize-cli db:drop"
+    "db:drop": "sequelize-cli db:drop",
+    "db:model:generate": "sequelize-cli model:generate",
+    "db:migration:generate": "sequelize-cli migration:generate"
   },
   "dependencies": {
     "@sentry/node": "5.9.0",
