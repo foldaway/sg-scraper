@@ -8,15 +8,19 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       address: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       opening_hours: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       location: {
+        allowNull: false,
         type: Sequelize.GEOMETRY('POINT'),
       },
       created_at: {

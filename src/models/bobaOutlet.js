@@ -2,10 +2,22 @@ module.exports = (sequelize, DataTypes) => {
   const bobaOutlet = sequelize.define(
     'bobaOutlet',
     {
-      title: DataTypes.STRING,
-      address: DataTypes.STRING,
-      opening_hours: DataTypes.STRING,
-      location: DataTypes.GEOMETRY('POINT'),
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      opening_hours: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.GEOMETRY('POINT'),
+        allowNull: false,
+      },
     },
     {
       underscored: true,

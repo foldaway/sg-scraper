@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'bobaChain',
     {
       name: DataTypes.STRING,
+      allowNull: false,
     },
     {
       underscored: true,
