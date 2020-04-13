@@ -5,14 +5,15 @@
   "repository": "git@github.com:bottleneckco/sg-scraper.git",
   "author": "Duncan Leo <hello@duncanleo.me>",
   "license": "MIT",
-  "type": "module",
-  "engines": {
-    "node": "^13"
-  },
   "scripts": {
-    "start": "node main.js",
-    "dev": "node --experimental-repl-await dev.js",
-    "dev:vscode": "node --inspect-brk=9229 --experimental-repl-await dev.js"
+    "start": "babel-node main.js",
+    "dev": "babel-node --experimental-repl-await dev.js",
+    "dev:vscode": "node --inspect-brk=9229 --experimental-repl-await dev.js",
+    "db:create": "sequelize-cli db:create",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo",
+    "db:migrate:status": "sequelize-cli db:migrate:status",
+    "db:drop": "sequelize-cli db:drop"
   },
   "dependencies": {
     "@sentry/node": "5.9.0",
