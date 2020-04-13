@@ -35,6 +35,5 @@ export default async function bug(browser) {
   ]);
 
   const data = bugs.filter(bug => bug.name !== null).map(bug => Object.assign(bug, {type: 'Bug'}));
-  console.log(data);
   return data;
 }

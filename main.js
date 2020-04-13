@@ -7,6 +7,7 @@ import fs from 'fs';
 import {spawnSync} from 'child_process';
 import puppeteer from 'puppeteer';
 import Sentry from '@sentry/node';
+import writeToDB from './src/util/db.js';
 import MODULES from './modules.js';
 
 if (process.env.SENTRY_DSN) {
@@ -76,6 +77,7 @@ const main = async () => {
       }
     }
     fs.writeFileSync(filename, JSON.stringify(data, null, isProduction ? 0 : 2));
+    await writeToDB(data, module);
   }
 
   await browser.close();
