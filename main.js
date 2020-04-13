@@ -4,7 +4,7 @@ import Promise from 'bluebird';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
-import {spawnSync} from 'child_process';
+import { spawnSync } from 'child_process';
 import puppeteer from 'puppeteer';
 import Sentry from '@sentry/node';
 import writeToDB from './src/util/db.js';
@@ -40,7 +40,10 @@ const main = async () => {
       try {
         const results = await module[dataSource](browser);
         data.push(...results);
-        console.log(`[DATA SOURCE] '${dataSource}'`, `- scraped ${results.length} items`);
+        console.log(
+          `[DATA SOURCE] '${dataSource}'`,
+          `- scraped ${results.length} items`
+        );
       } catch (e) {
         console.error(`[DATA SOURCE] '${dataSource}'`, e);
 
@@ -51,12 +54,12 @@ const main = async () => {
           screenshots = await Promise.map(
             pages,
             async page => {
-              const screenshot = await page.screenshot({encoding: 'base64'}); // base64
+              const screenshot = await page.screenshot({ encoding: 'base64' }); // base64
               const resp = await axios.post(
                 `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-                `image=${encodeURIComponent(screenshot)}&name=${encodeURIComponent(
-                  `${module}-${dataSource}`
-                )}`,
+                `image=${encodeURIComponent(
+                  screenshot
+                )}&name=${encodeURIComponent(`${module}-${dataSource}`)}`,
                 {
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -66,17 +69,24 @@ const main = async () => {
               );
               return resp.data.data.url_viewer;
             },
-            {concurrency: 1}
+            { concurrency: 1 }
           );
         }
         // eslint-disable-next-line func-names, prefer-arrow-callback
         Sentry.configureScope(function(scope) {
-          scope.setExtras(Object.fromEntries(pages.map((_, i) => [pageTitles[i], screenshots[i]])));
+          scope.setExtras(
+            Object.fromEntries(
+              pages.map((_, i) => [pageTitles[i], screenshots[i]])
+            )
+          );
           Sentry.captureException(e);
         });
       }
     }
-    fs.writeFileSync(filename, JSON.stringify(data, null, isProduction ? 0 : 2));
+    fs.writeFileSync(
+      filename,
+      JSON.stringify(data, null, isProduction ? 0 : 2)
+    );
     await writeToDB(data, module);
   }
 
