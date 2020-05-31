@@ -1,16 +1,16 @@
 {
-  "extends": ["airbnb-base", "prettier"],
-  "plugins": ["prettier"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
+  ],
   "env": {
     "es6": true,
     "browser": true,
     "node": true
   },
-  "rules": {
-    "import/extensions": "off",
-    "no-console": "off",
-    "prettier/prettier": ["error"],
-    "no-restricted-syntax": "off",
-    "no-await-in-loop": "off"
-  }
+  "rules": {}
 }
