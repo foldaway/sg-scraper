@@ -10,6 +10,8 @@ import ACCollectibleType from './ACCollectibleType';
 import ACCollectible from './ACCollectible';
 import Bank from './Bank';
 import BankATM from './BankATM';
+import BobaChain from './BobaChain';
+import BobaOutlet from './BobaOutlet';
 
 interface CustomOptions {
   use_env_variable: string;
@@ -61,9 +63,20 @@ ACCollectibleType.initialize(sequelize);
 ACCollectible.initialize(sequelize);
 Bank.initialize(sequelize);
 BankATM.initialize(sequelize);
+BobaChain.initialize(sequelize);
+BobaOutlet.initialize(sequelize);
 
 ACCollectible.hasOne(ACCollectibleType, { sourceKey: 'type_id' });
 BankATM.belongsTo(Bank, { targetKey: 'id' });
 Bank.hasMany(BankATM);
+BobaOutlet.belongsTo(BobaChain, { targetKey: 'id' });
+BobaChain.hasMany(BobaOutlet);
 
-export { ACCollectible, ACCollectibleType, Bank, BankATM };
+export {
+  ACCollectible,
+  ACCollectibleType,
+  Bank,
+  BankATM,
+  BobaChain,
+  BobaOutlet,
+};
