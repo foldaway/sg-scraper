@@ -1,23 +1,23 @@
-import { ACCollectibleType, ACCollectible } from './models';
+import { ACCollectibleType, ACCollectible, Bank, BankATM } from './models';
 
 async function scraper() {
-  const x = await ACCollectibleType.create({
-    name: 'test',
+  const [dbsBank] = await Bank.findOrCreate({
+    where: {
+      name: 'DBS',
+    },
   });
-  console.log(x);
-
-  const y = ACCollectible.build({
-    name: 'test ac',
-    location: 'somewhere',
-    sell_price: 99,
-    time: 'some time',
-    season: 'some season',
-    type_id: x.id,
+  const atm = await BankATM.create({
+    title: 'Amazing ATM',
+    address: '123 ABC Road',
+    opening_hours: '24/7',
+    location: {
+      type: 'Point',
+      coordinates: [103, 1],
+    },
+    bank_id: dbsBank.id,
   });
 
-  await y.save();
-
-  console.log(y);
+  console.log(atm);
 }
 
 scraper()

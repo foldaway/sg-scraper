@@ -8,6 +8,8 @@ import { Sequelize, Options, Dialect } from 'sequelize';
 import config from '../config/config.json';
 import ACCollectibleType from './ACCollectibleType';
 import ACCollectible from './ACCollectible';
+import Bank from './Bank';
+import BankATM from './BankATM';
 
 interface CustomOptions {
   use_env_variable: string;
@@ -57,7 +59,11 @@ export default sequelize;
 
 ACCollectibleType.initialize(sequelize);
 ACCollectible.initialize(sequelize);
+Bank.initialize(sequelize);
+BankATM.initialize(sequelize);
 
 ACCollectible.hasOne(ACCollectibleType, { sourceKey: 'type_id' });
+BankATM.belongsTo(Bank, { targetKey: 'id' });
+Bank.hasMany(BankATM);
 
-export { ACCollectible, ACCollectibleType };
+export { ACCollectible, ACCollectibleType, Bank, BankATM };
