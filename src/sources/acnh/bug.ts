@@ -3,7 +3,7 @@ import autoParse from '../../util/auto-parse';
 import { Browser } from 'puppeteer';
 import { Item } from './model';
 
-export default async function bug(browser: Browser): Promise<Item> {
+export default async function bug(browser: Browser): Promise<Item[]> {
   const bugs = await autoParse(browser, [
     {
       type: 'navigate',
