@@ -47,7 +47,7 @@ export default class BankATM extends Model {
         },
         location: {
           type: DataTypes.GEOMETRY('POINT'),
-          allowNull: false,
+          allowNull: true,
         },
         bank_id: {
           type: DataTypes.INTEGER,

@@ -46,7 +46,7 @@ export default class BobaOutlet extends Model {
         },
         location: {
           type: DataTypes.GEOMETRY('POINT'),
-          allowNull: false,
+          allowNull: true,
         },
         boba_chain_id: {
           type: DataTypes.INTEGER,
