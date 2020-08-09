@@ -1,6 +1,6 @@
 import Bluebird from 'bluebird';
-import autoLocation from '../../util/auto-location.js';
-import autoParse from '../../util/auto-parse.js';
+import autoLocation from '../../util/autoLocation';
+import autoParse from '../../util/auto-parse';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
 

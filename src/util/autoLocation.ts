@@ -1,5 +1,5 @@
-import lookupLocation from '../location/lookup.js';
-import postalCode from './postalCode.js';
+import lookupLocation from '../location/lookup';
+import postalCode from './postalCode';
 
 /**
  * Helper function to automatically set a place's address

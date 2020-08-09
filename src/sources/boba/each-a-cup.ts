@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 import Bluebird from 'bluebird';
-import autoLocation from '../../util/auto-location';
+import autoLocation from '../../util/autoLocation';
 import autoParse from '../../util/auto-parse';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
