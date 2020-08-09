@@ -43,7 +43,7 @@ export default class BankATM extends Model {
         },
         opening_hours: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
         },
         location: {
           type: DataTypes.GEOMETRY('POINT'),
