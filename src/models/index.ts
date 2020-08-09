@@ -66,7 +66,10 @@ BankATM.initialize(sequelize);
 BobaChain.initialize(sequelize);
 BobaOutlet.initialize(sequelize);
 
-ACCollectible.belongsTo(ACCollectibleType, { targetKey: 'id' });
+ACCollectible.belongsTo(ACCollectibleType, {
+  targetKey: 'id',
+  foreignKey: 'type_id',
+});
 BankATM.belongsTo(Bank, { targetKey: 'id' });
 Bank.hasMany(BankATM);
 BobaOutlet.belongsTo(BobaChain, { targetKey: 'id' });
