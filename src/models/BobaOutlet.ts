@@ -39,7 +39,6 @@ export default class BobaOutlet extends Model {
         address: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
         },
         opening_hours: {
           type: DataTypes.STRING,
@@ -61,6 +60,13 @@ export default class BobaOutlet extends Model {
         underscored: true,
         tableName: 'boba_outlets',
         sequelize,
+        indexes: [
+          {
+            name: 'boba_outlets_address_boba_chain_id_uk',
+            fields: ['address', 'boba_chain_id'],
+            unique: true,
+          },
+        ],
       }
     );
   }

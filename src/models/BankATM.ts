@@ -40,7 +40,6 @@ export default class BankATM extends Model {
         address: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
         },
         opening_hours: {
           type: DataTypes.STRING,
@@ -62,6 +61,13 @@ export default class BankATM extends Model {
         underscored: true,
         sequelize,
         tableName: 'bank_atms',
+        indexes: [
+          {
+            name: 'bank_atms_address_bank_id_uk',
+            fields: ['address', 'bank_id'],
+            unique: true,
+          },
+        ],
       }
     );
   }
