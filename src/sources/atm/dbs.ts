@@ -1,13 +1,10 @@
-import Promise from 'bluebird';
-import './model.js';
-import autoLocation from '../../util/auto-location.js';
-import autoParse from '../../util/auto-parse.js';
+import Bluebird from 'bluebird';
+import autoLocation from '../../util/auto-location';
+import autoParse from '../../util/auto-parse';
+import { Browser } from 'puppeteer';
+import { ATM } from './model';
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {Promise<Boba[]>}
- */
-export default async function dbs(browser) {
+export default async function dbs(browser: Browser): Promise<ATM[]> {
   const atms = await autoParse(browser, [
     {
       type: 'navigate',
@@ -90,13 +87,13 @@ export default async function dbs(browser) {
 
   const data = atms
     .flat()
-    .map(atm =>
+    .map((atm) =>
       Object.assign(atm, {
         address: `${atm.address}\n${atm.postalCode || ''}`,
         openingHours: '24/7',
         bank: 'DBS',
       })
     )
-    .map(({postalCode, ...fields}) => ({...fields}));
-  return Promise.map(data, autoLocation, {concurrency: 1});
+    .map(({ postalCode, ...fields }) => ({ ...fields }));
+  return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }
