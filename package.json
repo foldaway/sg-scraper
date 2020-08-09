@@ -27,8 +27,8 @@
     "pg-hstore": "^2.3.3",
     "puppeteer": "^2.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^5.21.6",
-    "sequelize-cli": "^5.5.1",
+    "sequelize": "^6.3.4",
+    "sequelize-cli": "^6.2.0",
     "ts-polyfill": "^3.8.2"
   },
   "devDependencies": {
