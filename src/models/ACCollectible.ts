@@ -36,7 +36,7 @@ export default class ACCollectible extends Model {
   public static initialize(sequelize: Sequelize): void {
     this.init(
       {
-        name: { type: DataTypes.STRING, allowNull: false },
+        name: { type: DataTypes.STRING, allowNull: false, unique: true },
         location: { type: DataTypes.STRING, allowNull: false },
         sell_price: { type: DataTypes.INTEGER, allowNull: false },
         season: { type: DataTypes.STRING, allowNull: false },
