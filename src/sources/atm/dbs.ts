@@ -90,7 +90,7 @@ export default async function dbs(browser: Browser): Promise<ATM[]> {
     .map((atm) =>
       Object.assign(atm, {
         address: `${atm.address}\n${atm.postalCode || ''}`,
-        openingHours: '24/7',
+        opening_hours: '24/7',
         bank: 'DBS',
       })
     )

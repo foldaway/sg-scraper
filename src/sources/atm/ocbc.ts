@@ -42,7 +42,7 @@ export default async function ocbc(browser: Browser): Promise<ATM[]> {
 
   const data = atms.map((atm) =>
     Object.assign(atm, {
-      openingHours: '24/7',
+      opening_hours: '24/7',
       bank: 'OCBC',
     })
   );
