@@ -12,6 +12,15 @@ export default async function autoLocation<T>(
     postalCode(obj.address) || obj.address
   );
   return Object.assign(obj, {
-    location: addressLookup ? addressLookup.results[0] : null,
+    location:
+      addressLookup?.results?.length !== 0
+        ? {
+            type: 'Point',
+            coordinates: [
+              addressLookup.results[0].LONGTITUDE,
+              addressLookup.results[0].LATITUDE,
+            ],
+          }
+        : null,
   });
 }
