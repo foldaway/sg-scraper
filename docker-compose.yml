@@ -5,7 +5,7 @@ services:
     image: postgis/postgis:12-3.0-alpine
     environment:
       - 'POSTGRES_PASSWORD=postgres'
-      - 'POSTGRES_DB=sg_scraper_dev'
+      - 'POSTGRES_DB=sg_scraper_development'
     ports:
       - '5432:5432'
 
