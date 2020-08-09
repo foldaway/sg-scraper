@@ -39,6 +39,7 @@ export default class BobaOutlet extends Model {
         address: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: true,
         },
         opening_hours: {
           type: DataTypes.STRING,
