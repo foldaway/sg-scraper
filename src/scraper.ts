@@ -42,7 +42,6 @@ async function atm(browser: Browser) {
       atms.map((atm) => ({ ...atm, bank_id: bank.id })),
       {
         fields: ['title', 'address', 'opening_hours', 'location', 'bank_id'],
-        validate: true,
       }
     );
   };
@@ -73,7 +72,7 @@ async function boba(browser: Browser) {
           'location',
           'boba_chain_id',
         ],
-        validate: true,
+        ignoreDuplicates: true,
       }
     );
   };
