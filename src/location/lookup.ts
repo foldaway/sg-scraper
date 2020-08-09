@@ -1,12 +1,14 @@
 import redis from 'redis';
-import {promisify} from 'util';
-import search from '../onemap/onemap.js';
+import { promisify } from 'util';
+import search, { Response } from '../onemap/onemap';
 
 /**
  * Lookup a location (with Redis caching)
  * @param {string} rawText
  */
-export default async function lookupLocation(rawText) {
+export default async function lookupLocation(
+  rawText: string
+): Promise<Response> {
   const client = redis.createClient(process.env.REDIS_URL);
 
   // Promisify
