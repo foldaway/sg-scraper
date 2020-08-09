@@ -22,14 +22,14 @@
  * @property {('navigate'|'elementClick'|'elementWait'|'elementsQuery'|'elementQueryShape'|'elementScrollIntoView'|'iterator'|'evaluatePage'|'mutateResult')} type
  *
  * elementClick, elementWait, elementsQuery, elementScrollIntoView
- * @property {string} selector DOM selector
- * @property {('css'|'xpath')} selectorType type of the selector
+ * @property {string} [selector] DOM selector
+ * @property {('css'|'xpath')} [selectorType] type of the selector
  *
  * elementWait
  * @property {number} [timeout=5000] timeout for elementWait
  *
  * navigate
- * @property {string|URLEvaluateFunction} url url to navigate to
+ * @property {string|URLEvaluateFunction} [url] url to navigate to
  *
  * evaluate
  * @property {EvaluateFunction} [evaluateFunc] function to be evaluated
@@ -47,23 +47,37 @@
  * @property {Object.<string, string|[string, QueryShapeProcessFunction]>} [queryShape] element shape to return
  */
 
-const isString = obj => typeof obj === 'string';
-const isFunction = obj => obj instanceof Function;
-const isAsyncFunction = obj => obj[Symbol.toStringTag] === 'AsyncFunction';
+//@ts-check
+
+/**
+ * @param {any} obj
+ * @returns {obj is String}
+ */
+const isString = (obj) => typeof obj === 'string';
+
+/**
+ * @param {any} obj
+ * @returns {obj is Function}
+ */
+const isFunction = (obj) => obj instanceof Function;
+
+/**
+ * @param {any} obj
+ * @returns {obj is Promise}
+ */
+const isAsyncFunction = (obj) => obj[Symbol.toStringTag] === 'AsyncFunction';
 const generateRandomString = () =>
-  Math.random()
-    .toString(36)
-    .substring(2, 15) +
-  Math.random()
-    .toString(36)
-    .substring(2, 15);
+  Math.random().toString(36).substring(2, 15) +
+  Math.random().toString(36).substring(2, 15);
+
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 /**
  * @async
  * @param {import('puppeteer').Browser} browser
  * @param {(Step)[]} steps
  * @param {object} initialResult an initial result to pass to the first step
- * @returns {object[]}
+ * @returns {Promise<object[]>}
  */
 export default async function autoParse(browser, steps, initialResult = null) {
   const page = await browser.newPage();
@@ -73,7 +87,7 @@ export default async function autoParse(browser, steps, initialResult = null) {
    * @param {Step} step
    * @param {?object} prevResult result of the previous step
    * @param {object} iteratee (if this step is running as part of a parent iterator step)
-   * @returns {?object} result
+   * @returns {Promise<?object>} result
    */
   async function handleStep(step, prevResult, iteratee = null) {
     console.log('Step', JSON.stringify(step));
@@ -95,16 +109,15 @@ export default async function autoParse(browser, steps, initialResult = null) {
 
     switch (type) {
       case 'navigate':
-        switch (true) {
-          case isString(url):
-            await page.goto(url);
-            break;
-          case isFunction(url):
-            await page.goto(url(prevResult, iteratee));
-            break;
-          default:
-            console.error('Unexpected url key value:', url);
-            break;
+        if (isString(url)) {
+          await page.goto(url);
+          break;
+        } else if (isFunction(url)) {
+          await page.goto(url(prevResult, iteratee));
+          break;
+        } else {
+          console.error('Unexpected url key value:', url);
+          break;
         }
         break;
       case 'elementClick':
@@ -115,10 +128,10 @@ export default async function autoParse(browser, steps, initialResult = null) {
         }
         break;
       case 'elementWait':
-        await page.waitForSelector(selector, {visible: true, timeout});
+        await page.waitForSelector(selector, { visible: true, timeout });
         break;
       case 'elementScrollIntoView':
-        await page.evaluate(arg => {
+        await page.evaluate((arg) => {
           if (arg instanceof HTMLElement) {
             arg.scrollIntoView();
           } else {
@@ -128,7 +141,9 @@ export default async function autoParse(browser, steps, initialResult = null) {
         break;
       case 'elementsQuery':
         if (selectorType === 'xpath') {
-          return ((querySource === 'iteratee' && iteratee) || page).$x(selector);
+          return ((querySource === 'iteratee' && iteratee) || page).$x(
+            selector
+          );
         }
         return ((querySource === 'iteratee' && iteratee) || page).$$(selector);
       case 'elementQueryShape':
@@ -142,6 +157,7 @@ export default async function autoParse(browser, steps, initialResult = null) {
                     ? (elem || document).querySelector(sel).textContent.trim()
                     : null,
                 querySource === 'iteratee' && iteratee,
+                //@ts-ignore
                 value
               );
               break;
@@ -154,7 +170,10 @@ export default async function autoParse(browser, steps, initialResult = null) {
                 querySource === 'iteratee' && iteratee,
                 value[0]
               );
-              elementQueryShapeResult[key] = value[1](elementQueryShapeResult[key]);
+              //@ts-ignore
+              elementQueryShapeResult[key] = value[1](
+                elementQueryShapeResult[key]
+              );
               break;
             default:
               console.error('Unexpected queryShape value type at key:', key);
@@ -166,7 +185,9 @@ export default async function autoParse(browser, steps, initialResult = null) {
         return page.evaluate(evaluateFunc, prevResult, iteratee);
       case 'iterator':
         if (!prevResult) {
-          throw new Error('prevResult is not a collection that is iterable:', prevResult);
+          throw new Error(
+            `prevResult is not a collection that is iterable: ${prevResult}`
+          );
         }
         for (const item of prevResult) {
           let tempResult = null;
