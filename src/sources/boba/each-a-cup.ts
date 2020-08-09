@@ -1,17 +1,14 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
-import Promise from 'bluebird';
-import './model.js';
-import autoLocation from '../../util/auto-location.js';
-import autoParse from '../../util/auto-parse.js';
+import Bluebird from 'bluebird';
+import autoLocation from '../../util/auto-location';
+import autoParse from '../../util/auto-parse';
+import { Browser } from 'puppeteer';
+import { Boba } from './model.js';
 
 const REGIONS = ['Central', 'North', 'West', 'East'];
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {Promise<Boba[]>}
- */
-export default async function eachACup(browser) {
+export default async function eachACup(browser: Browser): Promise<Boba[]> {
   const outlets = await autoParse(
     browser,
     [
@@ -20,7 +17,8 @@ export default async function eachACup(browser) {
         childSteps: [
           {
             type: 'navigate',
-            url: (_, region) => `http://www.each-a-cup.com/home/outlets/${region}`,
+            url: (_, region) =>
+              `http://www.each-a-cup.com/home/outlets/${region}`,
           },
           {
             type: 'elementWait',
@@ -50,6 +48,8 @@ export default async function eachACup(browser) {
     REGIONS
   );
 
-  const data = outlets.flat().map(outlet => Object.assign(outlet, {chain: 'Each-A-Cup'}));
-  return Promise.map(data, autoLocation, {concurrency: 1});
+  const data = outlets
+    .flat()
+    .map((outlet) => Object.assign(outlet, { chain: 'Each-A-Cup' }));
+  return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }

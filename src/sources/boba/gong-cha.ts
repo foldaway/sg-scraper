@@ -1,13 +1,10 @@
-import Promise from 'bluebird';
-import './model.js';
-import autoLocation from '../../util/auto-location.js';
-import autoParse from '../../util/auto-parse.js';
+import Bluebird from 'bluebird';
+import autoLocation from '../../util/auto-location';
+import autoParse from '../../util/auto-parse';
+import { Browser } from 'puppeteer';
+import { Boba } from './model';
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {Promise<Boba[]>}
- */
-export default async function gongCha(browser) {
+export default async function gongCha(browser: Browser): Promise<Boba[]> {
   const outlets = await autoParse(browser, [
     {
       type: 'navigate',
@@ -37,10 +34,10 @@ export default async function gongCha(browser) {
     },
   ]);
 
-  const data = outlets.map(outlet =>
+  const data = outlets.map((outlet) =>
     Object.assign(outlet, {
       chain: 'Gong Cha',
     })
   );
-  return Promise.map(data, autoLocation, {concurrency: 1});
+  return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }

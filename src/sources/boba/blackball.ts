@@ -1,13 +1,10 @@
-import Promise from 'bluebird';
-import './model.js';
+import Bluebird from 'bluebird';
 import autoLocation from '../../util/auto-location.js';
 import autoParse from '../../util/auto-parse.js';
+import { Browser } from 'puppeteer';
+import { Boba } from './model.js';
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {Promise<Boba[]>}
- */
-export default async function blackball(browser) {
+export default async function blackball(browser: Browser): Promise<Boba[]> {
   const outlets = await autoParse(browser, [
     {
       type: 'navigate',
@@ -32,6 +29,8 @@ export default async function blackball(browser) {
     },
   ]);
 
-  const data = outlets.map(outlet => Object.assign(outlet, {chain: 'Blackball'}));
-  return Promise.map(data, autoLocation, {concurrency: 1});
+  const data = outlets.map((outlet) =>
+    Object.assign(outlet, { chain: 'Blackball' })
+  );
+  return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }
