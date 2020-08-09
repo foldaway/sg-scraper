@@ -1,12 +1,9 @@
 /* eslint-disable no-shadow */
-import './model.js';
-import autoParse from '../../util/auto-parse.js';
+import autoParse from '../../util/auto-parse';
+import { Browser } from 'puppeteer';
+import { Item } from './model';
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {<any[]>}
- */
-export default async function bug(browser) {
+export default async function bug(browser: Browser): Promise<Item> {
   const bugs = await autoParse(browser, [
     {
       type: 'navigate',
@@ -34,6 +31,9 @@ export default async function bug(browser) {
     },
   ]);
 
-  const data = bugs.filter(bug => bug.name !== null).map(bug => Object.assign(bug, {type: 'Bug'}));
+  const data = bugs
+    .filter((bug) => bug.name !== null)
+    .map((bug) => Object.assign(bug, { type: 'Bug' }));
+  //@ts-ignore
   return data;
 }

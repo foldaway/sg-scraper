@@ -1,12 +1,9 @@
 /* eslint-disable no-shadow */
-import './model.js';
-import autoParse from '../../util/auto-parse.js';
+import autoParse from '../../util/auto-parse';
+import { Browser } from 'puppeteer';
+import { Item } from './model';
 
-/**
- * @param {import('puppeteer').Browser} browser
- * @returns {<any[]>}
- */
-export default async function fish(browser) {
+export default async function fish(browser: Browser): Promise<Item[]> {
   const fishes = await autoParse(browser, [
     {
       type: 'navigate',
@@ -35,7 +32,8 @@ export default async function fish(browser) {
   ]);
 
   const data = fishes
-    .filter(fish => fish.name !== null)
-    .map(fish => Object.assign(fish, {type: 'Fish'}));
+    .filter((fish) => fish.name !== null)
+    .map((fish) => Object.assign(fish, { type: 'Fish' }));
+  //@ts-ignore
   return data;
 }
