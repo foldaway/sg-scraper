@@ -1,3 +1,4 @@
+import 'ts-polyfill/lib/es2019-array';
 import { ACCollectibleType, ACCollectible, Bank, BankATM } from './models';
 
 async function scraper() {
