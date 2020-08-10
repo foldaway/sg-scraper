@@ -141,6 +141,6 @@ scraper()
   .then(() => process.exit(0))
   .catch((e) => {
     console.error(e);
-    Sentry.captureException(e);
+    Sentry?.captureException(e);
     process.exit(1);
   });
