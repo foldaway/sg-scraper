@@ -8,4 +8,8 @@ services:
       - 'POSTGRES_DB=sg_scraper_development'
     ports:
       - '5432:5432'
+  redis:
+    image: redis:6-alpine
+    ports:
+      - '6379:6379'
 
