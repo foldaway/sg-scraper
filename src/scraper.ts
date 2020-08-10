@@ -48,12 +48,18 @@ async function atm(browser: Browser) {
 
     const atms = await workFunc(browser);
 
-    await BankATM.bulkCreate(
-      atms.map((atm) => ({ ...atm, bank_id: bank.id })),
-      {
-        fields: ['title', 'address', 'opening_hours', 'location', 'bank_id'],
-      }
-    );
+    for (const atm of atms) {
+      await BankATM.findOrCreate({
+        where: {
+          address: atm.address,
+          bank_id: bank.id,
+        },
+        defaults: {
+          ...atm,
+          bank_id: bank.id,
+        },
+      });
+    }
   };
 
   await Promise.all([tempFunc('DBS', dbs), tempFunc('OCBC', ocbc)]);
@@ -71,20 +77,18 @@ async function boba(browser: Browser) {
     });
 
     const outlets = await workFunc(browser);
-
-    await BobaOutlet.bulkCreate(
-      outlets.map((outlet) => ({ ...outlet, boba_chain_id: chain.id })),
-      {
-        fields: [
-          'title',
-          'address',
-          'opening_hours',
-          'location',
-          'boba_chain_id',
-        ],
-        ignoreDuplicates: true,
-      }
-    );
+    for (const outlet of outlets) {
+      await BobaOutlet.findOrCreate({
+        where: {
+          address: outlet.address,
+          boba_chain_id: chain.id,
+        },
+        defaults: {
+          ...outlet,
+          boba_chain_id: chain.id,
+        },
+      });
+    }
   };
 
   await Promise.all([
@@ -109,16 +113,18 @@ async function acnh(browser: Browser) {
     });
 
     const collectibles = await workFunc(browser);
-
-    await ACCollectible.bulkCreate(
-      collectibles.map((collectible) => ({
-        ...collectible,
-        type_id: collectibleType.id,
-      })),
-      {
-        fields: ['name', 'location', 'sell_price', 'season', 'time', 'type_id'],
-      }
-    );
+    for (const collectible of collectibles) {
+      await ACCollectible.findOrCreate({
+        where: {
+          name: collectible.name,
+          type_id: collectibleType.id,
+        },
+        defaults: {
+          ...collectible,
+          type_id: collectibleType.id,
+        },
+      });
+    }
   };
 
   await Promise.all([tempFunc('Bug', bug), tempFunc('Fish', fish)]);
