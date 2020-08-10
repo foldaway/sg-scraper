@@ -120,7 +120,9 @@ async function scraper() {
     defaultViewport: null,
   });
 
-  await Promise.all([atm(browser), boba(browser), acnh(browser)]);
+  await atm(browser);
+  await boba(browser);
+  await acnh(browser);
 
   await browser.close();
 }
