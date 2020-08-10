@@ -49,15 +49,9 @@ async function atm(browser: Browser) {
     const atms = await workFunc(browser);
 
     for (const atm of atms) {
-      await BankATM.findOrCreate({
-        where: {
-          address: atm.address,
-          bank_id: bank.id,
-        },
-        defaults: {
-          ...atm,
-          bank_id: bank.id,
-        },
+      await BankATM.upsert({
+        ...atm,
+        bank_id: bank.id,
       });
     }
   };
@@ -78,15 +72,9 @@ async function boba(browser: Browser) {
 
     const outlets = await workFunc(browser);
     for (const outlet of outlets) {
-      await BobaOutlet.findOrCreate({
-        where: {
-          address: outlet.address,
-          boba_chain_id: chain.id,
-        },
-        defaults: {
-          ...outlet,
-          boba_chain_id: chain.id,
-        },
+      await BobaOutlet.upsert({
+        ...outlet,
+        boba_chain_id: chain.id,
       });
     }
   };
@@ -114,15 +102,9 @@ async function acnh(browser: Browser) {
 
     const collectibles = await workFunc(browser);
     for (const collectible of collectibles) {
-      await ACCollectible.findOrCreate({
-        where: {
-          name: collectible.name,
-          type_id: collectibleType.id,
-        },
-        defaults: {
-          ...collectible,
-          type_id: collectibleType.id,
-        },
+      await ACCollectible.upsert({
+        ...collectible,
+        type_id: collectibleType.id,
       });
     }
   };
