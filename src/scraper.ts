@@ -23,7 +23,17 @@ import { Boba } from './sources/boba/model';
 import { ATM } from './sources/atm/model';
 import { Item } from './sources/acnh/model';
 
-const isProduction = process.env.NODE_ENV === 'production';
+import Sentry from '@sentry/node';
+
+const { NODE_ENV, SENTRY_DSN } = process.env;
+
+const isProduction = NODE_ENV === 'production';
+
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+  });
+}
 
 async function atm(browser: Browser) {
   const tempFunc = async (
@@ -131,5 +141,6 @@ scraper()
   .then(() => process.exit(0))
   .catch((e) => {
     console.error(e);
+    Sentry.captureException(e);
     process.exit(1);
   });
