@@ -6,6 +6,7 @@
   "author": "Duncan Leo <hello@duncanleo.me>",
   "license": "MIT",
   "scripts": {
+    "scrape": "node dist/scraper.js",
     "dev:scrape": "ts-node src/scraper.ts",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",
