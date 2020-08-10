@@ -22,7 +22,7 @@ export default async function blackball(browser: Browser): Promise<Boba[]> {
           queryShape: {
             title: '.location-title-pro',
             address: '.location-address-pro',
-            openingHours: '.location-time-pro',
+            opening_hours: '.location-time-pro',
           },
         },
       ],

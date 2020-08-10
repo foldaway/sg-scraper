@@ -41,7 +41,7 @@ export default async function sharetea(browser: Browser): Promise<Boba[]> {
           queryShape: {
             title: '.elementor-heading-title',
             address: '.wpsl-location-address',
-            openingHours: '.wpsl-opening-hours',
+            opening_hours: '.wpsl-opening-hours',
           },
         },
       ],

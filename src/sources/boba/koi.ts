@@ -23,7 +23,7 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
             title: '.titlebox',
             address: '.txt a',
             phone: '.titlebox',
-            openingHours: '.txt',
+            opening_hours: '.txt',
           },
         },
       ],

@@ -27,7 +27,7 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
           queryShape: {
             title: '.p-title',
             address: '.p-area',
-            openingHours: '.p-time',
+            opening_hours: '.p-time',
           },
         },
       ],
