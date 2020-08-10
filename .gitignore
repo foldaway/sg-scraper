@@ -174,3 +174,5 @@ public/
 # End of https://www.gitignore.io/api/node
 
 .dev_repl_history
+
+dist/
