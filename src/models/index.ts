@@ -1,8 +1,5 @@
 'use strict';
 
-// const env from process.env.NODE_ENV || 'development';
-// import config from require(__dirname + '/../config/config.json')[env];
-// import db from {};
 import { Sequelize, Options, Dialect } from 'sequelize';
 
 import config from '../config/config.json';
