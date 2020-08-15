@@ -17,7 +17,7 @@
     "db:migration:generate": "sequelize-cli migration:generate",
     "build": "tsc -p tsconfig.production.json --outDir dist",
     "clean": "rm -Rf dist/**",
-    "dev:start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",
