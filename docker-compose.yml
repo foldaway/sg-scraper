@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgis/postgis:12-3.0-alpine
+    environment:
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_DB=sg_scraper_development'
+    ports:
+      - '5432:5432'
+  redis:
+    image: redis:6-alpine
+    ports:
+      - '6379:6379'
+
