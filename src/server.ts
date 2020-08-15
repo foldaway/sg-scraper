@@ -1,5 +1,3 @@
-// const Koa = require('koa');
-
 import Koa from 'koa';
 import cors from '@koa/cors';
 
