@@ -1,9 +1,12 @@
 // const Koa = require('koa');
 
 import Koa from 'koa';
-const app = new Koa();
+import cors from '@koa/cors';
 
 const PORT = process.env['PORT'] || 3000;
+
+const app = new Koa();
+app.use(cors());
 
 app.use(async (ctx) => {
   ctx.body = 'Hello World';
