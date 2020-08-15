@@ -16,7 +16,8 @@
     "db:model:generate": "sequelize-cli model:generate",
     "db:migration:generate": "sequelize-cli migration:generate",
     "build": "tsc -p tsconfig.production.json --outDir dist",
-    "clean": "rm -Rf dist/**"
+    "clean": "rm -Rf dist/**",
+    "dev:start": "ts-node src/server.ts"
   },
   "dependencies": {
     "@sentry/node": "^5.20.1",
