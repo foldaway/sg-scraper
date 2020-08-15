@@ -116,6 +116,7 @@ async function scraper() {
   const browser = await puppeteer.launch({
     headless: isProduction,
     defaultViewport: null,
+    args: isProduction ? ['--no-sandbox'] : [],
   });
 
   await atm(browser);
