@@ -23,7 +23,7 @@ import { Boba } from './sources/boba/model';
 import { ATM } from './sources/atm/model';
 import { Item } from './sources/acnh/model';
 
-import Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
