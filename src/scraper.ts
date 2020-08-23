@@ -1,7 +1,5 @@
 import 'ts-polyfill/lib/es2019-array';
 import {
-  ACCollectibleType,
-  ACCollectible,
   Bank,
   BankATM,
   BobaChain,
@@ -15,13 +13,10 @@ import eachACup from './sources/boba/each-a-cup';
 import koi from './sources/boba/koi';
 import liho from './sources/boba/liho';
 import sharetea from './sources/boba/sharetea';
-import bug from './sources/acnh/bug';
-import fish from './sources/acnh/fish';
 import gongCha from './sources/boba/gong-cha';
 
 import { Boba } from './sources/boba/model';
 import { ATM } from './sources/atm/model';
-import { Item } from './sources/acnh/model';
 
 import * as Sentry from '@sentry/node';
 
@@ -89,29 +84,6 @@ async function boba(browser: Browser) {
   ]);
 }
 
-async function acnh(browser: Browser) {
-  const tempFunc = async (
-    typeName: string,
-    workFunc: (browser: Browser) => Promise<Item[]>
-  ) => {
-    const [collectibleType] = await ACCollectibleType.findOrCreate({
-      where: {
-        name: typeName,
-      },
-    });
-
-    const collectibles = await workFunc(browser);
-    for (const collectible of collectibles) {
-      await ACCollectible.upsert({
-        ...collectible,
-        type_id: collectibleType.id,
-      });
-    }
-  };
-
-  await Promise.all([tempFunc('Bug', bug), tempFunc('Fish', fish)]);
-}
-
 async function scraper() {
   const browser = await puppeteer.launch({
     headless: isProduction,
@@ -121,7 +93,6 @@ async function scraper() {
 
   await atm(browser);
   await boba(browser);
-  await acnh(browser);
 
   await browser.close();
 }
