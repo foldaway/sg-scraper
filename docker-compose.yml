@@ -12,4 +12,11 @@ services:
     image: redis:6-alpine
     ports:
       - '6379:6379'
+  graphql:
+    image: graphile/postgraphile
+    command:
+      ["--connection", "postgres://postgres:postgres@postgres:5432/sg_scraper_development", "--port", "5000", "--schema", "public"]
+    ports:
+      - '5000:5000'
+
 
