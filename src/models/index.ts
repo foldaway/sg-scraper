@@ -3,8 +3,6 @@
 import { Sequelize, Options, Dialect } from 'sequelize';
 
 import config from '../config/config.json';
-import ACCollectibleType from './ACCollectibleType';
-import ACCollectible from './ACCollectible';
 import Bank from './Bank';
 import BankATM from './BankATM';
 import BobaChain from './BobaChain';
@@ -56,25 +54,17 @@ if (isCustomOptions(dbConfig)) {
 
 export default sequelize;
 
-ACCollectibleType.initialize(sequelize);
-ACCollectible.initialize(sequelize);
 Bank.initialize(sequelize);
 BankATM.initialize(sequelize);
 BobaChain.initialize(sequelize);
 BobaOutlet.initialize(sequelize);
 
-ACCollectible.belongsTo(ACCollectibleType, {
-  targetKey: 'id',
-  foreignKey: 'type_id',
-});
 BankATM.belongsTo(Bank, { targetKey: 'id' });
 Bank.hasMany(BankATM);
 BobaOutlet.belongsTo(BobaChain, { targetKey: 'id' });
 BobaChain.hasMany(BobaOutlet);
 
 export {
-  ACCollectible,
-  ACCollectibleType,
   Bank,
   BankATM,
   BobaChain,
