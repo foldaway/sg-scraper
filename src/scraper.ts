@@ -1,10 +1,5 @@
 import 'ts-polyfill/lib/es2019-array';
-import {
-  Bank,
-  BankATM,
-  BobaChain,
-  BobaOutlet,
-} from './models';
+
 import puppeteer, { Browser } from 'puppeteer';
 import dbs from './sources/atm/dbs';
 import ocbc from './sources/atm/ocbc';
@@ -19,6 +14,7 @@ import { Boba } from './sources/boba/model';
 import { ATM } from './sources/atm/model';
 
 import * as Sentry from '@sentry/node';
+import { readStore, writeStore } from './output';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -35,20 +31,11 @@ async function atm(browser: Browser) {
     bankName: string,
     workFunc: (browser: Browser) => Promise<ATM[]>
   ) => {
-    const [bank] = await Bank.findOrCreate({
-      where: {
-        name: bankName,
-      },
+    const data = readStore('banks.json');
+    writeStore('banks.json', {
+      ...data,
+      [bankName]: await workFunc(browser),
     });
-
-    const atms = await workFunc(browser);
-
-    for (const atm of atms) {
-      await BankATM.upsert({
-        ...atm,
-        bank_id: bank.id,
-      });
-    }
   };
 
   await Promise.all([tempFunc('DBS', dbs), tempFunc('OCBC', ocbc)]);
@@ -59,19 +46,11 @@ async function boba(browser: Browser) {
     chainName: string,
     workFunc: (browser: Browser) => Promise<Boba[]>
   ) => {
-    const [chain] = await BobaChain.findOrCreate({
-      where: {
-        name: chainName,
-      },
+    const data = readStore('boba.json');
+    writeStore('boba.json', {
+      ...data,
+      [chainName]: await workFunc(browser),
     });
-
-    const outlets = await workFunc(browser);
-    for (const outlet of outlets) {
-      await BobaOutlet.upsert({
-        ...outlet,
-        boba_chain_id: chain.id,
-      });
-    }
   };
 
   await Promise.all([
@@ -89,6 +68,8 @@ async function scraper() {
     headless: isProduction,
     defaultViewport: null,
     args: isProduction ? ['--no-sandbox'] : [],
+    executablePath:
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   });
 
   await atm(browser);
