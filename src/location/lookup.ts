@@ -1,5 +1,4 @@
-import redis from 'redis';
-import { promisify } from 'util';
+import Redis from 'ioredis';
 import search, { Response } from '../onemap/onemap';
 
 /**
@@ -9,18 +8,12 @@ import search, { Response } from '../onemap/onemap';
 export default async function lookupLocation(
   rawText: string
 ): Promise<Response> {
-  const client = redis.createClient(process.env.REDIS_URL);
+  const client = new Redis(process.env.REDIS_URL);
 
-  // Promisify
-  const existsA = promisify(client.exists).bind(client);
-  const getA = promisify(client.get).bind(client);
-  const setA = promisify(client.set).bind(client);
-  const quitA = promisify(client.quit).bind(client);
-
-  const results = (await existsA(rawText))
-    ? JSON.parse(await getA(rawText))
+  const results = (await client.exists(rawText))
+    ? JSON.parse(await client.get(rawText))
     : await search(rawText);
-  await setA(rawText, JSON.stringify(results));
-  await quitA();
+  await client.set(rawText, JSON.stringify(results));
+  await client.quit();
   return results;
 }
