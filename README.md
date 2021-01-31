@@ -1,4 +1,6 @@
 # sg-scraper
+![.github/workflows/run.yml](https://github.com/bottleneckco/sg-scraper/workflows/.github/workflows/run.yml/badge.svg)
+
 Scripts to scrape metadata of places in Singapore.
 
 ### Development
