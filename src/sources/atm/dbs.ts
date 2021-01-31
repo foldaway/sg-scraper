@@ -32,7 +32,7 @@ export default async function dbs(browser: Browser): Promise<ATM[]> {
     },
     {
       type: 'elementClick',
-      selector: 'div.list-item[name="DL"] .service-name',
+      selector: 'div.list-item[name="POSB"] .service-name',
     },
     {
       type: 'elementClick',
