@@ -4,6 +4,10 @@ import path from 'path';
 
 const DIRECTORY_DIST = path.join(process.cwd(), 'output');
 
+try {
+  fs.mkdirSync(DIRECTORY_DIST);
+} catch (e) {}
+
 export function readStore(fileName: string): Record<string, unknown> {
   const filePath = path.join(DIRECTORY_DIST, fileName);
   if (!fs.existsSync(filePath)) {
