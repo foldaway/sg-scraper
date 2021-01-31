@@ -12,7 +12,7 @@ export default async function sharetea(browser: Browser): Promise<Boba[]> {
     },
     {
       type: 'elementWait',
-      selector: '.fr-box',
+      selector: '#primary',
     },
     {
       type: 'elementsQuery',
