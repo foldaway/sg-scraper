@@ -1,11 +1,20 @@
-import Redis from 'ioredis';
 import search, { Response } from '../onemap/onemap';
+import redisClient from '../redisClient';
 
-let client = new Redis(process.env.REDIS_URL);
+let isConnected = true;
 
-client.on('error', () => {
-  client = null;
+redisClient.on('error', () => {
+  isConnected = false;
   console.warn('[DEV] Error connecting to Redis, proceeding without it');
+});
+
+redisClient.on('end', () => {
+  isConnected = false;
+  console.warn('Disconnected from Redis, proceeding without it');
+});
+
+redisClient.on('connect', () => {
+  isConnected = true;
 });
 
 /**
@@ -15,19 +24,19 @@ client.on('error', () => {
 export default async function lookupLocation(
   rawText: string
 ): Promise<Response> {
-  if (client != null) {
-    const isCachedResultAvailable = await client.exists(rawText);
+  if (isConnected) {
+    const isCachedResultAvailable = await redisClient.exists(rawText);
 
     if (isCachedResultAvailable) {
-      return JSON.parse(await client.get(rawText));
+      return JSON.parse(await redisClient.get(rawText));
     }
   }
 
   const results = await search(rawText);
 
-  if (client != null) {
-    await client.set(rawText, JSON.stringify(results));
-    await client.quit();
+  if (isConnected) {
+    await redisClient.set(rawText, JSON.stringify(results));
+    await redisClient.quit();
   }
   return results;
 }
