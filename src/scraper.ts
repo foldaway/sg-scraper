@@ -68,8 +68,6 @@ async function scraper() {
     headless: isProduction,
     defaultViewport: null,
     args: isProduction ? ['--no-sandbox'] : [],
-    executablePath:
-      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   });
 
   await atm(browser);
