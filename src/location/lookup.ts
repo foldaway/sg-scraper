@@ -1,42 +1,22 @@
 import search, { Response } from '../onemap/onemap';
-import redisClient from '../redisClient';
 
-let isConnected = true;
-
-redisClient.on('error', () => {
-  isConnected = false;
-  console.warn('[DEV] Error connecting to Redis, proceeding without it');
-});
-
-redisClient.on('end', () => {
-  isConnected = false;
-  console.warn('Disconnected from Redis, proceeding without it');
-});
-
-redisClient.on('connect', () => {
-  isConnected = true;
-});
+const CACHE: Record<string, Response> = {};
 
 /**
- * Lookup a location (with Redis caching)
+ * Lookup a location (with ephemeral in-memory caching)
  * @param {string} rawText
  */
 export default async function lookupLocation(
   rawText: string
 ): Promise<Response> {
-  if (isConnected) {
-    const isCachedResultAvailable = await redisClient.exists(rawText);
+  const isCachedResultAvailable = rawText in CACHE;
 
-    if (isCachedResultAvailable) {
-      return JSON.parse(await redisClient.get(rawText));
-    }
+  if (isCachedResultAvailable) {
+    return CACHE[rawText];
   }
 
   const results = await search(rawText);
 
-  if (isConnected) {
-    await redisClient.set(rawText, JSON.stringify(results));
-    await redisClient.quit();
-  }
+  CACHE[rawText] = results;
   return results;
 }
