@@ -14,6 +14,7 @@ import { ATM } from './sources/atm/model';
 
 import * as Sentry from '@sentry/node';
 import { readStore, writeStore } from './output';
+import chicha from './sources/boba/chicha';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -58,6 +59,7 @@ async function boba(browser: Browser) {
     tempFunc('Gong Cha', gongCha),
     tempFunc('Koi', koi),
     tempFunc('LiHO', liho),
+    tempFunc('ChiCha', chicha),
   ]);
 }
 
