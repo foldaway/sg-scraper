@@ -4,6 +4,8 @@
  * @returns {string}
  */
 
+import { first } from 'lodash';
+
 /**
  * @callback EvaluateFunction
  * @param {object} prevResult result of the previous step
@@ -122,7 +124,13 @@ export default async function autoParse(browser, steps, initialResult = null) {
         break;
       case 'elementClick':
         if (selector) {
-          await page.click(selector);
+          let element;
+          if (selectorType === 'css') {
+            element = await page.$(selector);
+          } else {
+            element = first(await page.$x(selector));
+          }
+          await element?.click();
         } else {
           await iteratee.click();
         }
