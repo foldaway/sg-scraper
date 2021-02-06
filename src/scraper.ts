@@ -44,16 +44,18 @@ async function atm(browser: Browser) {
 }
 
 async function boba(browser: Browser) {
-  const tempFunc = async (
+  async function tempFunc(
     chainName: string,
     workFunc: (browser: Browser) => Promise<Boba[]>
-  ) => {
-    const data = readStore('boba.json');
+  ) {
+    const data = await workFunc(browser);
+
+    const store = readStore('boba.json');
     writeStore('boba.json', {
-      ...data,
-      [chainName]: await workFunc(browser),
+      ...store,
+      [chainName]: data,
     });
-  };
+  }
 
   await Promise.all([
     tempFunc('BlackBall', blackball),
