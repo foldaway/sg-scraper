@@ -16,6 +16,7 @@ import * as Sentry from '@sentry/node';
 import { readStore, writeStore } from './output';
 import chicha from './sources/boba/chicha';
 import tigersugar from './sources/boba/tiger-sugar';
+import playmade from './sources/boba/playmade';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -62,6 +63,7 @@ async function boba(browser: Browser) {
     tempFunc('LiHO', liho),
     tempFunc('ChiCha', chicha),
     tempFunc('Tiger Sugar', tigersugar),
+    tempFunc('Playmade', playmade),
   ]);
 }
 
