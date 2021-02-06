@@ -7,7 +7,6 @@ import blackball from './sources/boba/blackball';
 import eachACup from './sources/boba/each-a-cup';
 import koi from './sources/boba/koi';
 import liho from './sources/boba/liho';
-import sharetea from './sources/boba/sharetea';
 import gongCha from './sources/boba/gong-cha';
 
 import { Boba } from './sources/boba/model';
@@ -59,7 +58,6 @@ async function boba(browser: Browser) {
     tempFunc('Gong Cha', gongCha),
     tempFunc('Koi', koi),
     tempFunc('LiHO', liho),
-    tempFunc('ShareTea', sharetea),
   ]);
 }
 
