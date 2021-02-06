@@ -25,21 +25,25 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
         return childTextNodes.length > 0;
       });
 
+      if (spans.length < 3) {
+        continue;
+      }
+
       const boba: Boba = {
         title: '',
         address: '',
         openingHours: '',
         phone: '',
         location: '',
-        chain: '',
+        chain: 'ChiCha',
       };
 
-      let l = spans.length;
-
-      for (let i = 0; i < l; i++) {
+      for (let i = 0; i < spans.length; i++) {
         const span = spans[i];
 
         const { textContent } = span;
+
+        console.log(i, textContent);
 
         switch (true) {
           case textContent.startsWith('CHICHA'): {
@@ -47,13 +51,13 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
             break;
           }
           case textContent.match(/^Address/gim) !== null: {
-            l--;
             boba.address = spans[i + 1].textContent.trim();
+            i += 1;
             break;
           }
           case textContent.match(/^Opening/gim) !== null: {
-            l--;
             boba.openingHours = spans[i + 1].textContent.trim();
+            i += 1;
             break;
           }
         }
@@ -65,8 +69,5 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
     return outlets;
   });
 
-  const data = outlets.map((outlet) =>
-    Object.assign(outlet, { chain: 'ChiCha' })
-  );
-  return Bluebird.map(data, autoLocation, { concurrency: 1 });
+  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
 }
