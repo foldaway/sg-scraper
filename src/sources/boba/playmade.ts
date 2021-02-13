@@ -6,6 +6,8 @@ import { Boba } from './model.js';
 export default async function playmade(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
 
+  await page.tracing.start({ path: 'traces/playmade.json', screenshots: true });
+
   await page.goto('https://www.playmade.com.sg/say-hello');
 
   const outlets: Boba[] = await page.evaluate(() => {
@@ -74,6 +76,8 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
 
     return outlets;
   });
+
+  await page.tracing.stop();
 
   return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
 }

@@ -27,4 +27,9 @@ jobs:
           build_dir: output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: traces
+          path: traces/*.json

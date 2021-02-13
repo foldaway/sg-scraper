@@ -18,6 +18,8 @@ import chicha from './sources/boba/chicha';
 import tigersugar from './sources/boba/tiger-sugar';
 import playmade from './sources/boba/playmade';
 
+import fs from 'fs';
+
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
 const isProduction = NODE_ENV === 'production';
@@ -27,6 +29,10 @@ if (SENTRY_DSN) {
     dsn: SENTRY_DSN,
   });
 }
+
+try {
+  fs.mkdirSync('traces');
+} catch (e) {}
 
 async function atm(browser: Browser) {
   const tempFunc = async (
