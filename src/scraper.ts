@@ -46,6 +46,7 @@ async function atm(browser: Browser) {
         [bankName]: await workFunc(browser),
       });
     } catch (e) {
+      console.error(e);
       Sentry?.captureException(e);
     }
   };
@@ -67,6 +68,7 @@ async function boba(browser: Browser) {
         [chainName]: data,
       });
     } catch (e) {
+      console.error(e);
       Sentry?.captureException(e);
     }
   }
