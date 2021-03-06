@@ -39,11 +39,15 @@ async function atm(browser: Browser) {
     bankName: string,
     workFunc: (browser: Browser) => Promise<ATM[]>
   ) => {
-    const data = readStore('banks.json');
-    writeStore('banks.json', {
-      ...data,
-      [bankName]: await workFunc(browser),
-    });
+    try {
+      const data = readStore('banks.json');
+      writeStore('banks.json', {
+        ...data,
+        [bankName]: await workFunc(browser),
+      });
+    } catch (e) {
+      Sentry?.captureException(e);
+    }
   };
 
   await Promise.all([tempFunc('DBS', dbs), tempFunc('OCBC', ocbc)]);
@@ -54,13 +58,17 @@ async function boba(browser: Browser) {
     chainName: string,
     workFunc: (browser: Browser) => Promise<Boba[]>
   ) {
-    const data = await workFunc(browser);
+    try {
+      const data = await workFunc(browser);
 
-    const store = readStore('boba.json');
-    writeStore('boba.json', {
-      ...store,
-      [chainName]: data,
-    });
+      const store = readStore('boba.json');
+      writeStore('boba.json', {
+        ...store,
+        [chainName]: data,
+      });
+    } catch (e) {
+      Sentry?.captureException(e);
+    }
   }
 
   await Promise.all([
