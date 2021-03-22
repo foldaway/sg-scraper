@@ -12,7 +12,7 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
     },
     {
       type: 'elementsQuery',
-      selector: '.global-wrap .item',
+      selector: '.tab-pane.active .global-wrap .item',
     },
     {
       type: 'iterator',
