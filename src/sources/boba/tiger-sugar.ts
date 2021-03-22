@@ -16,7 +16,7 @@ export default async function tigersugar(browser: Browser): Promise<Boba[]> {
 
   await page.waitFor(2000);
 
-  const pageButtons = await page.$$('.paginate_button');
+  const pageButtons = await page.$$('.paginate_button:not(.disabled)');
 
   const outlets: Boba[] = [];
 
