@@ -18,6 +18,8 @@ import chicha from './sources/boba/chicha';
 import tigersugar from './sources/boba/tiger-sugar';
 import playmade from './sources/boba/playmade';
 
+import hawkers from './sources/hawker';
+
 import fs from 'fs';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
@@ -85,6 +87,20 @@ async function boba(browser: Browser) {
   ]);
 }
 
+async function hawker() {
+  try {
+    const data = await hawkers();
+
+    const store = readStore('hawker.json');
+    writeStore('hawker.json', {
+      hawker: data,
+    });
+  } catch (e) {
+    console.log(e);
+    Sentry?.captureException(e);
+  }
+}
+
 async function scraper() {
   const isARMMac = process.arch === 'arm64' && process.platform === 'darwin';
 
@@ -99,6 +115,7 @@ async function scraper() {
 
   await atm(browser);
   await boba(browser);
+  await hawker();
 
   await browser.close();
 }
