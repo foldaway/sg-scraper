@@ -91,6 +91,7 @@ export default async function hawker(): Promise<Hawker[]> {
         type: 'Point',
         coordinates: [hawkerObj.longitude_hc, hawkerObj.latitude_hc],
       },
+      imageUrl: hawkerObj.photourl,
       ...closureDetails,
     };
   });
