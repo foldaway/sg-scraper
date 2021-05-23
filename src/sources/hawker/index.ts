@@ -96,5 +96,7 @@ export default async function hawker(): Promise<Hawker[]> {
     };
   });
 
+  console.log(`Fetched ${result.length} hawkers' results`);
+
   return result;
 }
