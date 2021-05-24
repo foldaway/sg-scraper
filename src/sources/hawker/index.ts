@@ -1,7 +1,9 @@
+import moment, { Moment } from 'moment-timezone';
+
 import { Hawker, HawkerRaw } from './model';
 import autoParse from '../../util/data-gov-api';
 
-const TODAY = new Date();
+const TODAY = moment();
 const KEYS = ['q1', 'q2', 'q3', 'q4', 'others'];
 const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
 
@@ -24,16 +26,17 @@ const splitDate = (dateString: string) => {
  * hence only enddate is only use to find the closest event
  */
 const getCloseDetails = (hawker: HawkerRaw) => {
-  const upcomingClosures: { key: string; endDate: Date }[] = [];
+  const upcomingClosures: { key: string; endDate: Moment }[] = [];
 
   // Convert a date string into a Date object, factoring in SG timezone
-  const convertFromDateString = (dateString: string): Date => {
+  const convertFromDateString = (dateString: string): Moment => {
     const split = splitDate(dateString);
     if (!split) {
-      return new Date(new Date(dateString).toLocaleDateString('en-SG'));
+      return moment.tz(dateString, 'Asia/Singapore');
     }
-    return new Date(
-      `${split.year}-${split.month}-${split.day}T00:00:00.000+0800`
+    return moment.tz(
+      `${split.year}-${split.month}-${split.day} 00:00`,
+      'Asia/Singapore'
     );
   };
 
@@ -41,7 +44,7 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     const tempKey =
       key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
     const rawEndDate = convertFromDateString(hawker[tempKey]);
-    rawEndDate.setDate(rawEndDate.getDate() + 1);
+    rawEndDate.add(1, 'days');
 
     if (TODAY < rawEndDate) {
       upcomingClosures.push({ key, endDate: rawEndDate });
@@ -56,8 +59,8 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     };
   }
 
-  const upcoming = upcomingClosures.sort(
-    (a, b) => a.endDate.getTime() - b.endDate.getTime()
+  const upcoming = upcomingClosures.sort((a, b) =>
+    a.endDate.diff(b.endDate)
   )[0];
 
   const closeStartDate =
@@ -68,8 +71,8 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     upcoming.key === 'others' ? hawker.remarks_other_works : 'cleaning';
 
   return {
-    closeStartDate: closeStartDate.getTime(),
-    closeEndDate: upcoming.endDate.getTime(),
+    closeStartDate: closeStartDate.valueOf(),
+    closeEndDate: upcoming.endDate.valueOf(),
     closeReason,
   };
 };
