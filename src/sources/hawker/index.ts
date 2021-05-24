@@ -1,6 +1,9 @@
 import { Hawker, HawkerRaw } from './model';
+import autoParse from '../../util/data-gov-api';
 
-import autoParse from '../../util/autoParse-datagov';
+const TODAY = new Date();
+const KEYS = ['q1', 'q2', 'q3', 'q4', 'others'];
+const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
 
 const splitDate = (dateString: string) => {
   const data = dateString.split('/');
@@ -21,8 +24,6 @@ const splitDate = (dateString: string) => {
  * hence only enddate is only use to find the closest event
  */
 const getCloseDetails = (hawker: HawkerRaw) => {
-  const today = new Date();
-  const keys = ['q1', 'q2', 'q3', 'q4', 'others'];
   const upcomingClosures: { key: string; endDate: Date }[] = [];
 
   // Convert a date string into a Date object, factoring in SG timezone
@@ -36,33 +37,33 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     );
   };
 
-  for (const key of keys) {
+  for (const key of KEYS) {
     const tempKey =
-      key === 'others' ? 'other_works_enddate' : key + '_cleaningenddate';
+      key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
     const rawEndDate = convertFromDateString(hawker[tempKey]);
     rawEndDate.setDate(rawEndDate.getDate() + 1);
 
-    if (today < rawEndDate) {
+    if (TODAY < rawEndDate) {
       upcomingClosures.push({ key, endDate: rawEndDate });
     }
+  }
+
+  if (upcomingClosures.length === 0) {
+    return {
+      closeStartDate: null,
+      closeEndDate: null,
+      closeReason: null,
+    };
   }
 
   const upcoming = upcomingClosures.sort(
     (a, b) => a.endDate.getTime() - b.endDate.getTime()
   )[0];
 
-  if (!upcoming) {
-    return {
-      closeStartDate: undefined,
-      closeEndDate: undefined,
-      closeReason: undefined,
-    };
-  }
-
   const closeStartDate =
     upcoming.key === 'others'
       ? convertFromDateString(hawker.other_works_startdate)
-      : convertFromDateString(hawker[upcoming.key + '_cleaningstartdate']);
+      : convertFromDateString(hawker[`${upcoming.key}_cleaningstartdate`]);
   const closeReason =
     upcoming.key === 'others' ? hawker.remarks_other_works : 'cleaning';
 
@@ -74,12 +75,11 @@ const getCloseDetails = (hawker: HawkerRaw) => {
 };
 
 export default async function hawker(): Promise<Hawker[]> {
-  const resource_id = 'b80cb643-a732-480d-86b5-e03957bc82aa';
   const params = {
     limit: 150,
   };
-  const response = await autoParse(resource_id, params);
-  const hawkersList = <HawkerRaw[]>(<unknown>response?.result.records);
+  const response = await autoParse(RESOURCE_ID, params);
+  const hawkersList = (<unknown>response?.result.records) as HawkerRaw[];
 
   const result = hawkersList.map((hawkerObj) => {
     const closureDetails = getCloseDetails(hawkerObj);
