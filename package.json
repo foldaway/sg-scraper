@@ -18,6 +18,8 @@
     "axios": "^0.21.1",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.19",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "pg": "^8.0.2",
     "pg-hstore": "^2.3.3",
     "puppeteer": "^2.0.0",
