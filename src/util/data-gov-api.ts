@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-interface Response {
+interface Response<TResponse> {
   help: string;
   success: boolean;
   result?: {
-    resouce_id: string;
+    resource_id: string;
     fields: {
       type: string;
       id: string;
     }[];
-    records: Record<string, unknown>[];
+    records: TResponse[];
     _links: {
       start: string;
       next: string;
@@ -23,10 +23,10 @@ interface Response {
 
 const url = 'https://data.gov.sg/api/action/datastore_search';
 
-export default async function autoParse(
+export default async function dataGovApi<TResponse>(
   resource_id: string,
   params: Record<string, string | number> = {}
-): Promise<Response> {
+): Promise<Response<TResponse>> {
   const query = {
     resource_id,
     ...params,
