@@ -2,9 +2,11 @@ export interface Hawker {
   title: string;
   address: string;
   status: string;
-  closeStartDate?: number;
-  closeEndDate?: number;
-  closeReason?: string;
+  hawkerClosure?: {
+    closeStartDate?: number;
+    closeEndDate?: number;
+    closeReason?: string;
+  }[];
   imageUrl: string;
   location: {
     type: string;
