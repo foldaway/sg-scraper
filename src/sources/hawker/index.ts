@@ -32,24 +32,25 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     return null;
   }
 
-  const upcoming = orderBy(upcomingClosures, ['endDate'], ['asc'])[0];
+  const upcomingSorted = orderBy(upcomingClosures, ['endDate'], ['asc']);
 
-  const startKey =
-    upcoming.key === 'others'
-      ? 'other_works_startdate'
-      : `${upcoming.key}_cleaningstartdate`;
+  const hawkerClosure = upcomingSorted.map((upcoming) => {
+    const key =
+      upcoming.key === 'others'
+        ? 'other_works_startdate'
+        : `${upcoming.key}_cleaningstartdate`;
 
-  const closeStartDate = moment.tz(
-    `${hawker[startKey]} 00:00`,
-    'Asia/Singapore'
-  );
+    const closeStartDate = moment.tz(`${hawker[key]} 00:00`, 'Asia/Singapore');
 
-  return {
-    closeStartDate: closeStartDate.valueOf(),
-    closeEndDate: upcoming.endDate.valueOf(),
-    closeReason:
-      upcoming.key === 'others' ? hawker.remarks_other_works : 'cleaning',
-  };
+    return {
+      closeStartDate: closeStartDate.valueOf(),
+      closeEndDate: upcoming.endDate.valueOf(),
+      closeReason:
+        upcoming.key === 'others' ? hawker.remarks_other_works : 'cleaning',
+    };
+  });
+
+  return hawkerClosure;
 };
 
 export default async function hawker(): Promise<Hawker[]> {
@@ -60,7 +61,7 @@ export default async function hawker(): Promise<Hawker[]> {
   const hawkersList = response?.result.records;
 
   const result = hawkersList.map((hawkerObj) => {
-    const closureDetails = getCloseDetails(hawkerObj);
+    const hawkerClosure = getCloseDetails(hawkerObj);
     return {
       title: hawkerObj.name,
       address: hawkerObj.address_myenv,
@@ -70,7 +71,7 @@ export default async function hawker(): Promise<Hawker[]> {
         coordinates: [hawkerObj.longitude_hc, hawkerObj.latitude_hc],
       },
       imageUrl: hawkerObj.photourl,
-      ...closureDetails,
+      hawkerClosure: hawkerClosure,
     };
   });
 
