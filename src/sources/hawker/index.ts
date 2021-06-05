@@ -20,7 +20,11 @@ const getCloseDetails = (hawker: HawkerRaw) => {
   for (const key of KEYS) {
     const tempKey =
       key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
-    const rawEndDate = moment.tz(`${hawker[tempKey]} 00:00`, 'Asia/Singapore');
+    const rawEndDate = moment.tz(
+      `${hawker[tempKey]} 00:00`,
+      'DD/MM/YYYY',
+      'Asia/Singapore'
+    );
     rawEndDate.add(1, 'days');
 
     if (TODAY.isBefore(rawEndDate)) {
