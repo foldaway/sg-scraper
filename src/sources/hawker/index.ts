@@ -44,7 +44,11 @@ const getCloseDetails = (hawker: HawkerRaw) => {
         ? 'other_works_startdate'
         : `${upcoming.key}_cleaningstartdate`;
 
-    const closeStartDate = moment.tz(`${hawker[key]} 00:00`, 'Asia/Singapore');
+    const closeStartDate = moment.tz(
+      `${hawker[key]} 00:00`,
+      'DD/MM/YYYY',
+      'Asia/Singapore'
+    );
 
     return {
       closeStartDate: closeStartDate.valueOf(),
