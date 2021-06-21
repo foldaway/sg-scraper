@@ -62,7 +62,7 @@ const getCloseDetails = (hawker: HawkerRaw) => {
 };
 
 const removeHttp = (url: string) => {
-  return url.replace(/(^\w+:|^)\/\//, '');
+  return url.replace('http://', 'https://');
 };
 
 export default async function hawker(): Promise<Hawker[]> {
