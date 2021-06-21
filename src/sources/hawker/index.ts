@@ -61,6 +61,10 @@ const getCloseDetails = (hawker: HawkerRaw) => {
   return hawkerClosure;
 };
 
+const removeHttp = (url: string) => {
+  return url.replace(/(^\w+:|^)\/\//, '');
+};
+
 export default async function hawker(): Promise<Hawker[]> {
   const params = {
     limit: 150,
@@ -78,7 +82,7 @@ export default async function hawker(): Promise<Hawker[]> {
         type: 'Point',
         coordinates: [hawkerObj.longitude_hc, hawkerObj.latitude_hc],
       },
-      imageUrl: hawkerObj.photourl,
+      imageUrl: removeHttp(hawkerObj.photourl),
       hawkerClosure: hawkerClosure,
     };
   });
