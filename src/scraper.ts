@@ -79,7 +79,7 @@ async function boba(browser: Browser) {
     tempFunc('BlackBall', blackball),
     tempFunc('Each-A-Cup', eachACup),
     tempFunc('Gong Cha', gongCha),
-    tempFunc('Koi', koi),
+    tempFunc('KOI', koi),
     tempFunc('LiHO', liho),
     tempFunc('ChiCha', chicha),
     tempFunc('Tiger Sugar', tigersugar),
