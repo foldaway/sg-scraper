@@ -2,6 +2,7 @@ import Bluebird from 'bluebird';
 import autoLocation from '../../util/autoLocation';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
+import { ChainNames } from './constants';
 
 export default async function tigersugar(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -55,7 +56,7 @@ export default async function tigersugar(browser: Browser): Promise<Boba[]> {
           phone: columns[2].textContent,
           location: '',
           openingHours: '',
-          chain: 'Tiger Sugar',
+          chain: ChainNames.tigerSugar,
         };
 
         outlets.push(boba);

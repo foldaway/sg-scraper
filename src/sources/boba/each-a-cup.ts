@@ -5,6 +5,7 @@ import autoLocation from '../../util/autoLocation';
 import autoParse from '../../util/auto-parse';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
+import { ChainNames } from './constants';
 
 const REGIONS = ['Central', 'North', 'West', 'East'];
 
@@ -50,6 +51,6 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
 
   const data = outlets
     .flat()
-    .map((outlet) => Object.assign(outlet, { chain: 'Each-A-Cup' }));
+    .map((outlet) => Object.assign(outlet, { chain: ChainNames.eachACup }));
   return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }

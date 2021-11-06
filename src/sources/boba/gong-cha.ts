@@ -2,6 +2,7 @@ import Bluebird from 'bluebird';
 import autoLocation from '../../util/autoLocation';
 import { Browser } from 'puppeteer';
 import { Boba } from './model';
+import { ChainNames } from './constants';
 
 export default async function gongCha(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -30,8 +31,7 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
           openingHours,
           phone: '',
           location: '',
-
-          chain: 'Gong Cha',
+          chain: ChainNames.gongCha,
         };
 
         results.push(outlet);
