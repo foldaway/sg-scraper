@@ -11,8 +11,9 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
     waitUntil: 'networkidle0',
   });
 
+  const chain = ChainNames.gongCha;
   async function scrapeItems(): Promise<Boba[]> {
-    const items = await page.evaluate(() => {
+    const items = await page.evaluate((chain) => {
       const results: Boba[] = [];
       const itemElements = document.querySelectorAll('.item');
 
@@ -31,14 +32,14 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
           openingHours,
           phone: '',
           location: '',
-          chain: ChainNames.gongCha,
+          chain,
         };
 
         results.push(outlet);
       }
 
       return results;
-    });
+    }, chain);
 
     return items;
   }

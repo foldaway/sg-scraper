@@ -9,7 +9,8 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
 
   await page.goto('https://www.chichasanchen.com.sg/');
 
-  const outlets: Boba[] = await page.evaluate(() => {
+  const chain = ChainNames.chicha;
+  const outlets: Boba[] = await page.evaluate((chain) => {
     const outlets: Boba[] = [];
 
     const container = document.querySelector('#comp-jwncx772');
@@ -36,7 +37,7 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
         openingHours: '',
         phone: '',
         location: '',
-        chain: ChainNames.chicha,
+        chain,
       };
 
       for (let i = 0; i < spans.length; i++) {
@@ -68,7 +69,7 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
     }
 
     return outlets;
-  });
+  }, chain);
 
   return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
 }

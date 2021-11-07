@@ -30,8 +30,7 @@ export default async function blackball(browser: Browser): Promise<Boba[]> {
     },
   ]);
 
-  const data = outlets.map((outlet) =>
-    Object.assign(outlet, { chain: ChainNames.blackball })
-  );
+  const chain = ChainNames.blackball;
+  const data = outlets.map((outlet) => Object.assign(outlet, { chain }));
   return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }

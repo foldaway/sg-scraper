@@ -9,7 +9,8 @@ export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
 
   await page.goto('https://mrcoconut.sg/outlets/');
 
-  const outlets: Boba[] = await page.evaluate(() => {
+  const chain = ChainNames.mrCoconut;
+  const outlets: Boba[] = await page.evaluate((chain) => {
     const outlets: Boba[] = [];
 
     const stores = [];
@@ -42,13 +43,13 @@ export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
         openingHours: h2s[2].textContent.trim(),
         phone: '',
         location: '',
-        chain: ChainNames.mrCoconut,
+        chain,
       };
 
       outlets.push(boba);
     }
     return outlets;
-  });
+  }, chain);
 
   return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
 }

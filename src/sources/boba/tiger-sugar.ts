@@ -20,6 +20,7 @@ export default async function tigersugar(browser: Browser): Promise<Boba[]> {
   const pageButtons = await page.$$('.paginate_button:not(.disabled)');
 
   const outlets: Boba[] = [];
+  const chain = ChainNames.tigerSugar;
 
   for (const pageButton of pageButtons) {
     const isVisible = await page.evaluate(
@@ -37,7 +38,7 @@ export default async function tigersugar(browser: Browser): Promise<Boba[]> {
     await pageButton.click();
     await page.waitFor(5000);
 
-    const pageOutlets: Boba[] = await page.evaluate(() => {
+    const pageOutlets: Boba[] = await page.evaluate((chain) => {
       const outlets: Boba[] = [];
 
       const tables = [...document.querySelectorAll('.city_table')];
@@ -56,14 +57,14 @@ export default async function tigersugar(browser: Browser): Promise<Boba[]> {
           phone: columns[2].textContent,
           location: '',
           openingHours: '',
-          chain: ChainNames.tigerSugar,
+          chain,
         };
 
         outlets.push(boba);
       }
 
       return outlets;
-    });
+    }, chain);
 
     outlets.push(...pageOutlets);
   }
