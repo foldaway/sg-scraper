@@ -1,8 +1,6 @@
 name: 'Run scraper'
 on:
   push:
-    branches:
-      - master
   schedule:
     - cron: '0 0 * * 6'
   workflow_dispatch:
@@ -23,7 +21,7 @@ jobs:
           NODE_ENV: production
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Deploy to GitHub Pages
-        if: success()
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
@@ -31,6 +29,12 @@ jobs:
           commit_message: 'chore: deploy to GitHub Pages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload JSON artifacts
+        if: ${{ success() && github.ref != 'refs/heads/master' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output/*.json
       - name: Upload traces
         if: failure()
         uses: actions/upload-artifact@v2
