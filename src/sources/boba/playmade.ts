@@ -11,7 +11,8 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
 
   await page.goto('https://www.playmade.com.sg/say-hello');
 
-  const outlets: Boba[] = await page.evaluate(() => {
+  const chain = ChainNames.playmade;
+  const outlets: Boba[] = await page.evaluate((chain) => {
     const outlets: Boba[] = [];
 
     const container = document.querySelector('#comp-kbz2ze2r');
@@ -33,7 +34,7 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
       openingHours: '',
       phone: '',
       address: '',
-      chain: ChainNames.playmade,
+      chain,
     };
 
     for (let i = 0; i < elements.length; i++) {
@@ -76,7 +77,7 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
     }
 
     return outlets;
-  });
+  }, chain);
 
   await page.tracing.stop();
 

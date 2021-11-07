@@ -31,9 +31,8 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
     },
   ]);
 
-  const data = outlets.map((outlet) =>
-    Object.assign(outlet, { chain: ChainNames.koi })
-  );
+  const chain = ChainNames.koi;
+  const data = outlets.map((outlet) => Object.assign(outlet, { chain }));
 
   return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }

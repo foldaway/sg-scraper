@@ -37,9 +37,8 @@ export default async function liho(browser: Browser): Promise<Boba[]> {
     },
   ]);
 
-  const data = outlets.map((outlet) =>
-    Object.assign(outlet, { chain: ChainNames.liho })
-  );
+  const chain = ChainNames.liho;
+  const data = outlets.map((outlet) => Object.assign(outlet, { chain }));
   return Bluebird.map(data, autoLocation, {
     concurrency: 1,
   });

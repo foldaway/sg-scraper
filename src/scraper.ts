@@ -64,6 +64,7 @@ async function boba(browser: Browser) {
     workFunc: (browser: Browser) => Promise<Boba[]>
   ) {
     try {
+      console.log('Scraping: ', chainName);
       const data = await workFunc(browser);
 
       const store = readStore('boba.json');
@@ -71,6 +72,7 @@ async function boba(browser: Browser) {
         ...store,
         [chainName]: data,
       });
+      console.log('Completed: ', chainName);
     } catch (e) {
       console.error(e);
       Sentry?.captureException(e);

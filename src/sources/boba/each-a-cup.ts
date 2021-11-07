@@ -49,8 +49,7 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
     REGIONS
   );
 
-  const data = outlets
-    .flat()
-    .map((outlet) => Object.assign(outlet, { chain: ChainNames.eachACup }));
+  const chain = ChainNames.eachACup;
+  const data = outlets.flat().map((outlet) => Object.assign(outlet, { chain }));
   return Bluebird.map(data, autoLocation, { concurrency: 1 });
 }
