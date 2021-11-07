@@ -21,6 +21,8 @@ import playmade from './sources/boba/playmade';
 import hawkers from './sources/hawker';
 
 import fs from 'fs';
+import mrCoconut from './sources/boba/mr-coconut';
+import { ChainName, ChainNames } from './sources/boba/constants';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -58,7 +60,7 @@ async function atm(browser: Browser) {
 
 async function boba(browser: Browser) {
   async function tempFunc(
-    chainName: string,
+    chainName: ChainName,
     workFunc: (browser: Browser) => Promise<Boba[]>
   ) {
     try {
@@ -76,14 +78,15 @@ async function boba(browser: Browser) {
   }
 
   await Promise.all([
-    tempFunc('BlackBall', blackball),
-    tempFunc('Each-A-Cup', eachACup),
-    tempFunc('Gong Cha', gongCha),
-    tempFunc('KOI', koi),
-    tempFunc('LiHO', liho),
-    tempFunc('ChiCha', chicha),
-    tempFunc('Tiger Sugar', tigersugar),
-    tempFunc('Playmade', playmade),
+    tempFunc(ChainNames.blackball, blackball),
+    tempFunc(ChainNames.chicha, chicha),
+    tempFunc(ChainNames.eachACup, eachACup),
+    tempFunc(ChainNames.gongCha, gongCha),
+    tempFunc(ChainNames.koi, koi),
+    tempFunc(ChainNames.liho, liho),
+    tempFunc(ChainNames.mrCoconut, mrCoconut),
+    tempFunc(ChainNames.playmade, playmade),
+    tempFunc(ChainNames.tigerSugar, tigersugar),
   ]);
 }
 

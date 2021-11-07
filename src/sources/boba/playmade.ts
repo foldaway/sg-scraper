@@ -2,6 +2,7 @@ import Bluebird from 'bluebird';
 import autoLocation from '../../util/autoLocation';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
+import { ChainNames } from './constants';
 
 export default async function playmade(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -32,7 +33,7 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
       openingHours: '',
       phone: '',
       address: '',
-      chain: 'Playmade',
+      chain: ChainNames.playmade,
     };
 
     for (let i = 0; i < elements.length; i++) {

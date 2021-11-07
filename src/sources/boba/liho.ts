@@ -3,13 +3,13 @@ import autoLocation from '../../util/autoLocation';
 import autoParse from '../../util/auto-parse';
 import { Browser } from 'puppeteer';
 import { Boba } from './model';
+import { ChainNames } from './constants';
 
 export default async function liho(browser: Browser): Promise<Boba[]> {
   const outlets = await autoParse(browser, [
     {
       type: 'navigate',
-      url:
-        'http://www.streetdirectory.com/businessfinder/company_branch/163304/5890/',
+      url: 'http://www.streetdirectory.com/businessfinder/company_branch/163304/5890/',
     },
     {
       type: 'elementWait',
@@ -38,7 +38,7 @@ export default async function liho(browser: Browser): Promise<Boba[]> {
   ]);
 
   const data = outlets.map((outlet) =>
-    Object.assign(outlet, { chain: 'LiHO' })
+    Object.assign(outlet, { chain: ChainNames.liho })
   );
   return Bluebird.map(data, autoLocation, {
     concurrency: 1,

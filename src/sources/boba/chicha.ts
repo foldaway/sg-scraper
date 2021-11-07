@@ -2,6 +2,7 @@ import Bluebird from 'bluebird';
 import autoLocation from '../../util/autoLocation';
 import { Browser } from 'puppeteer';
 import { Boba } from './model.js';
+import { ChainNames } from './constants';
 
 export default async function chicha(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -35,7 +36,7 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
         openingHours: '',
         phone: '',
         location: '',
-        chain: 'ChiCha',
+        chain: ChainNames.chicha,
       };
 
       for (let i = 0; i < spans.length; i++) {
