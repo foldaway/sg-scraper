@@ -118,7 +118,7 @@ async function scraper() {
       : undefined,
   });
 
-  await atm(browser);
+  //  await atm(browser);
   await boba(browser);
   await hawker();
 
