@@ -15,7 +15,7 @@
   "dependencies": {
     "@sentry/node": "^5.20.1",
     "@types/geojson": "^7946.0.7",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.19",
     "moment": "^2.29.1",
