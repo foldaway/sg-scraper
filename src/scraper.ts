@@ -1,5 +1,3 @@
-import 'ts-polyfill/lib/es2019-array';
-
 import puppeteer, { Browser } from 'puppeteer';
 import blackball from './sources/boba/blackball';
 import eachACup from './sources/boba/each-a-cup';
