@@ -10,7 +10,6 @@ import { Boba } from './sources/boba/model';
 import * as Sentry from '@sentry/node';
 import { readStore, writeStore } from './output';
 import chicha from './sources/boba/chicha';
-import tigersugar from './sources/boba/tiger-sugar';
 import playmade from './sources/boba/playmade';
 
 import hawkers from './sources/hawker';
@@ -63,7 +62,6 @@ async function boba(browser: Browser) {
     tempFunc(ChainNames.liho, liho),
     tempFunc(ChainNames.mrCoconut, mrCoconut),
     tempFunc(ChainNames.playmade, playmade),
-    tempFunc(ChainNames.tigerSugar, tigersugar),
   ]);
 }
 

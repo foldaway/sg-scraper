@@ -7,7 +7,6 @@ export const ChainNames = {
   liho: 'LiHO' as const,
   mrCoconut: 'Mr Coconut' as const,
   playmade: 'Playmade' as const,
-  tigerSugar: 'Tiger Sugar' as const,
 };
 
-export type ChainName = typeof ChainNames[keyof typeof ChainNames];
+export type ChainName = (typeof ChainNames)[keyof typeof ChainNames];
