@@ -130,6 +130,7 @@ export default async function autoParse(browser, steps, initialResult = null) {
           } else {
             element = first(await page.$x(selector));
           }
+          // @ts-ignore
           await element?.click();
         } else {
           await iteratee.click();
