@@ -84,15 +84,10 @@ async function hawker() {
 }
 
 async function scraper() {
-  const isARMMac = process.arch === 'arm64' && process.platform === 'darwin';
-
   const browser = await puppeteer.launch({
     headless: isProduction,
     defaultViewport: null,
     args: isProduction ? ['--no-sandbox'] : [],
-    executablePath: isARMMac
-      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-      : undefined,
   });
 
   await boba(browser);
