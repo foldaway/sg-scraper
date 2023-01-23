@@ -126,13 +126,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.0.tgz#3ba770047723b3eeb8dc9fca02cce8a7fb6378da"
   integrity sha512-w8VZUN/f7SSbvVReb9SWp6cJFevxb4/nkG65yLAya//98WgocKm5PLDAtSs5CtJJJM+kHmJjO/6mmYW4MHShZA==
 
-"@types/puppeteer@^3.0.1":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-3.0.5.tgz#5ef5d023f45c0dfcc82e97548891b11b6ce868fb"
-  integrity sha512-NkphUMkpbr/us6hp1AqUh/UxX5Tf2UJU94MvaF8OOgIUPBipYodql+yRjcysJKqwnDkchp+cD/8jntI/C9StzA==
-  dependencies:
-    "@types/node" "*"
-
 "@types/yauzl@^2.9.1":
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/@types/yauzl/-/yauzl-2.9.2.tgz#c48e5d56aff1444409e39fa164b0b4d4552a7b7a"
