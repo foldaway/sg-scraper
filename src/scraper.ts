@@ -8,6 +8,8 @@ import gongCha from './sources/boba/gong-cha';
 import { Boba } from './sources/boba/model';
 
 import * as Sentry from '@sentry/node';
+import pug from 'pug';
+
 import { readStore, writeStore } from './output';
 import chicha from './sources/boba/chicha';
 import playmade from './sources/boba/playmade';
@@ -17,6 +19,9 @@ import hawkers from './sources/hawker';
 import fs from 'fs';
 import mrCoconut from './sources/boba/mr-coconut';
 import { ChainName, ChainNames } from './sources/boba/constants';
+import path from 'path';
+import moment from 'moment-timezone';
+import * as os from 'os';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -90,6 +95,33 @@ async function scraper() {
   await hawker();
 
   await browser.close();
+
+  // Generate index.html
+
+  const now = moment();
+
+  const generatedTime = {
+    isoString: now.toISOString(true),
+    displayText: now.format('lll ZZ'),
+  };
+
+  const osInfo = {
+    platform: os.platform(),
+    arch: os.arch(),
+  };
+
+  const files = fs.readdirSync('output');
+
+  const indexPage = pug.renderFile(
+    path.join(__dirname, 'templates/index.pug'),
+    {
+      files,
+      osInfo,
+      generatedTime,
+    }
+  );
+
+  fs.writeFileSync('output/index.html', indexPage);
 }
 
 scraper()

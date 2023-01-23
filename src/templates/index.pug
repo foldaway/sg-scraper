@@ -1,0 +1,29 @@
+doctype html
+html(lang='en')
+    head
+        title sg-scraper
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    style.
+      html {
+        font-family: sans-serif;
+      }
+
+    body
+        h1 sg-scraper
+
+        p Scripts to scrape metadata of places in Singapore.
+
+        section
+            h2 Generated Files
+
+            ul
+              each val in files
+                  li
+                      a(href=val)= val
+
+        p
+            | Generated&nbsp;
+            time(datetime=generatedTime.isoString)= generatedTime.displayText
+            | &nbsp;on&nbsp;
+            span #{osInfo.platform}/#{osInfo.arch}

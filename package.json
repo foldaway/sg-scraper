@@ -8,7 +8,7 @@
   "scripts": {
     "scrape": "node dist/scraper.js",
     "dev:scrape": "ts-node src/scraper.ts",
-    "build": "tsc -p tsconfig.production.json --outDir dist",
+    "build": "tsc -p tsconfig.production.json --outDir dist && cp -R src/templates dist/",
     "clean": "rm -Rf dist/**",
     "start": "ts-node src/server.ts"
   },
