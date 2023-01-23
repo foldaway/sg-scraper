@@ -466,11 +466,6 @@ cookie@^0.4.1:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.1.tgz#afd713fe26ebd21ba95ceb61f9a8116e50a537d1"
   integrity sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==
 
-core-js@^3.6.4:
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
-  integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
-
 cosmiconfig@8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-8.0.0.tgz#e9feae014eab580f858f8a0288f38997a7bebe97"
@@ -1443,13 +1438,6 @@ ts-node@^8.10.2:
     make-error "^1.1.1"
     source-map-support "^0.5.17"
     yn "3.1.1"
-
-ts-polyfill@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/ts-polyfill/-/ts-polyfill-3.8.2.tgz#7375c6b6a4ae074af4f6200ff6c0d32dbbd113cb"
-  integrity sha512-x0M4kx+FObO88sedZ1zld+YX+GvcgaYSVnHspNftI4GRT86FTBy41O89ztKfvue0XtaKpb8WBpPZsh82hy3Ncw==
-  dependencies:
-    core-js "^3.6.4"
 
 tslib@^1.8.1, tslib@^1.9.3:
   version "1.14.1"

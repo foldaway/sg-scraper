@@ -19,8 +19,7 @@
     "lodash": "^4.17.19",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.35",
-    "puppeteer": "^19.5.2",
-    "ts-polyfill": "^3.8.2"
+    "puppeteer": "^19.5.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.32",
