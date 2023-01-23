@@ -4,9 +4,9 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "plugins": ["simple-import-sort"],
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
   "env": {
@@ -14,5 +14,7 @@
     "browser": true,
     "node": true
   },
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  }
 }
