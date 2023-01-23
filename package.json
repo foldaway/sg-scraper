@@ -19,6 +19,7 @@
     "lodash": "^4.17.19",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.35",
+    "pug": "^3.0.2",
     "puppeteer": "^19.5.2"
   },
   "devDependencies": {
