@@ -14,7 +14,7 @@ export default async function yakun(browser: Browser) {
 
     await page.goto(`http://yakun.com/find-us/local/${region}`);
 
-    const chain = ChainNames.kopifellas;
+    const chain = ChainNames.yakun;
 
     const scrapedOutlets: Boba[] = await page.evaluate((chain) => {
       const outlets: Boba[] = [];
