@@ -176,5 +176,5 @@ public/
 .dev_repl_history
 
 dist/
-output/*.json
+output/
 traces
