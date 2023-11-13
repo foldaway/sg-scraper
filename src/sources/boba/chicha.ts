@@ -13,7 +13,9 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
   const outlets: Boba[] = await page.evaluate((chain) => {
     const outlets: Boba[] = [];
 
-    const container = document.querySelector('#comp-jwncx772');
+    const container = document.querySelector(
+      'div[data-mesh-id="Containerc1dmpinlineContent-gridContainer"]'
+    );
     const stores = container.querySelectorAll(
       'div[data-testid="richTextElement"]'
     );
@@ -45,8 +47,6 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
 
         const { textContent } = span;
 
-        console.log(i, textContent);
-
         switch (true) {
           case textContent.startsWith('CHICHA'): {
             boba.title = textContent.trim();
@@ -63,6 +63,10 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
             break;
           }
         }
+      }
+
+      if (boba.address.length === 0) {
+        continue;
       }
 
       outlets.push(boba);
