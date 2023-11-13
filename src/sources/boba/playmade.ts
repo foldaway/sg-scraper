@@ -15,18 +15,15 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
   const outlets: Boba[] = await page.evaluate((chain) => {
     const outlets: Boba[] = [];
 
-    const container = document.querySelector('#comp-kbz2ze2r');
-
-    const elements = [...container.querySelectorAll('span')].filter((elem) => {
-      const childTextNodes = [...elem.childNodes].filter(
-        (node) => node.nodeType === Node.TEXT_NODE
-      );
-
-      return (
-        childTextNodes.length > 0 &&
-        elem.classList.contains('wixGuard') === false
-      );
-    });
+    const container = document.querySelector(
+      '#comp-kbz2ze2r'
+    ) as HTMLDivElement;
+    const lines = container.innerText
+      .replace(/[\u200Bb]/g, '')
+      .trim()
+      .split(/\n+/g)
+      .filter((x) => x.length > 0)
+      .filter((x) => x !== `""`);
 
     const boba: Boba = {
       title: '',
@@ -37,38 +34,28 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
       chain,
     };
 
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      const { textContent } = element;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
 
       switch (true) {
         case boba.title.length === 0: {
-          boba.title = textContent.trim();
+          boba.title = line.trim();
           break;
         }
-        case textContent.match(/^Address/gim) !== null: {
-          if (elements[i + 1].textContent.match(/^Address/gim) !== null) {
-            // Handle edge case
-            i += 1;
-          }
-          boba.address = elements[i + 1].textContent;
-          i += 1;
+        case line.match(/^Address:\s?/im) !== null: {
+          boba.address = line.replace(/Address:\s?/im, '');
           break;
         }
-        case textContent.match(/^Opening/gim) !== null: {
-          boba.openingHours = textContent.replace(/^Opening hours:\s?/gi, '');
-          i += 1;
+        case line.match(/^Opening hours:\s?/im) !== null: {
+          boba.openingHours = line.replace(/^Opening hours:\s?/im, '');
           break;
         }
-        case textContent.match(/^Contact/gim) !== null: {
-          boba.phone = textContent.replace(/^Contact:\s?/gi, '');
-          i += 1;
-
+        case line.match(/^Contact:\s?/im) !== null: {
+          boba.phone = line.replace(/^Contact:\s?/im, '');
           break;
         }
-        case textContent.match(/^Available/gim) !== null: {
-          i += 1;
-
+        // Partial match - they have a typo
+        case line.match(/^Avail?/im) !== null: {
           outlets.push({ ...boba });
           boba.title = '';
           break;
