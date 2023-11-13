@@ -7,6 +7,7 @@ export const ChainNames = {
   liho: 'LiHO' as const,
   mrCoconut: 'Mr Coconut' as const,
   playmade: 'Playmade' as const,
+  kopifellas: 'Kopifellas' as const,
 };
 
 export type ChainName = (typeof ChainNames)[keyof typeof ChainNames];
