@@ -17,7 +17,7 @@ export default async function autoLocation<T>(
         ? {
             type: 'Point',
             coordinates: [
-              parseFloat(addressLookup.results[0].LONGTITUDE),
+              parseFloat(addressLookup.results[0].LONGITUDE),
               parseFloat(addressLookup.results[0].LATITUDE),
             ],
           }

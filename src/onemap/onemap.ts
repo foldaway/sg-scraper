@@ -16,7 +16,6 @@ export interface Result {
   Y: string;
   LATITUDE: string;
   LONGITUDE: string;
-  LONGTITUDE: string;
 }
 
 /**
