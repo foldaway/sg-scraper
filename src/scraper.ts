@@ -24,6 +24,7 @@ import moment from 'moment-timezone';
 import * as os from 'os';
 import kopifellas from './sources/boba/kopifellas';
 import yakun from './sources/boba/yakun';
+import localCoffeePeople from './sources/boba/local-coffee-people';
 
 const { NODE_ENV, SENTRY_DSN } = process.env;
 
@@ -71,6 +72,7 @@ async function boba(browser: Browser) {
     tempFunc(ChainNames.playmade, playmade),
     tempFunc(ChainNames.kopifellas, kopifellas),
     tempFunc(ChainNames.yakun, yakun),
+    tempFunc(ChainNames.localCoffeePeople, localCoffeePeople),
   ]);
 }
 
