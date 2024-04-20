@@ -1,7 +1,7 @@
 import axios from 'axios';
 import querystring from 'querystring';
 
-const BASE_URL = 'https://developers.onemap.sg';
+const BASE_URL = 'https://www.onemap.gov.sg';
 
 export interface Response {
   found: number;
@@ -30,7 +30,7 @@ export default async function search(term: string): Promise<Response> {
     pageNum: '1',
   };
   const response = await axios.get(
-    `${BASE_URL}/commonapi/search?${querystring.stringify(query)}`,
+    `${BASE_URL}/api/common/elastic/search?${querystring.stringify(query)}`,
     {
       responseType: 'json',
     }
