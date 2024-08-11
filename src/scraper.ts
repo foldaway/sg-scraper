@@ -62,17 +62,17 @@ async function boba(browser: Browser) {
   }
 
   await Promise.all([
-    tempFunc(ChainNames.blackball, blackball),
-    tempFunc(ChainNames.chicha, chicha),
+    // tempFunc(ChainNames.blackball, blackball),
+    // tempFunc(ChainNames.chicha, chicha),
     tempFunc(ChainNames.eachACup, eachACup),
-    tempFunc(ChainNames.gongCha, gongCha),
-    tempFunc(ChainNames.koi, koi),
-    tempFunc(ChainNames.liho, liho),
-    tempFunc(ChainNames.mrCoconut, mrCoconut),
-    tempFunc(ChainNames.playmade, playmade),
-    tempFunc(ChainNames.kopifellas, kopifellas),
-    tempFunc(ChainNames.yakun, yakun),
-    tempFunc(ChainNames.localCoffeePeople, localCoffeePeople),
+    // tempFunc(ChainNames.gongCha, gongCha),
+    // tempFunc(ChainNames.koi, koi),
+    // tempFunc(ChainNames.liho, liho),
+    // tempFunc(ChainNames.mrCoconut, mrCoconut),
+    // tempFunc(ChainNames.playmade, playmade),
+    // tempFunc(ChainNames.kopifellas, kopifellas),
+    // tempFunc(ChainNames.yakun, yakun),
+    // tempFunc(ChainNames.localCoffeePeople, localCoffeePeople),
   ]);
 }
 
@@ -98,7 +98,7 @@ async function scraper() {
   });
 
   await boba(browser);
-  await hawker();
+  // await hawker();
 
   await browser.close();
 
