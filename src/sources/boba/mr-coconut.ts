@@ -10,8 +10,8 @@ export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
   await page.goto('https://mrcoconut.sg/outlets/');
 
   const chain = ChainNames.mrCoconut;
-  const outlets: Boba[] = await page.evaluate((chain) => {
-    const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = await page.evaluate((chain) => {
+    const outlets: Omit<Boba, 'location'>[] = [];
 
     const stores = [];
     [...document.querySelectorAll('div[data-widget_type="heading.default"]')]
@@ -37,12 +37,11 @@ export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
         .filter((token) => token !== '')
         .join(' ');
 
-      const boba: Boba = {
+      const boba: Omit<Boba, 'location'> = {
         title: h2s[0].textContent.trim(),
         address: address,
         openingHours: h2s[2].textContent.trim(),
         phone: '',
-        location: '',
         chain,
       };
 

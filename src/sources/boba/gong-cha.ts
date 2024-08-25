@@ -12,9 +12,9 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
   });
 
   const chain = ChainNames.gongCha;
-  async function scrapeItems(): Promise<Boba[]> {
+  async function scrapeItems(): Promise<Omit<Boba, 'location'>[]> {
     const items = await page.evaluate((chain) => {
-      const results: Boba[] = [];
+      const results: Omit<Boba, 'location'>[] = [];
       const itemElements = document.querySelectorAll('.item');
 
       for (const element of itemElements) {
@@ -26,12 +26,11 @@ export default async function gongCha(browser: Browser): Promise<Boba[]> {
           continue;
         }
 
-        const outlet: Boba = {
+        const outlet: Omit<Boba, 'location'> = {
           title,
           address,
           openingHours,
           phone: '',
-          location: '',
           chain,
         };
 

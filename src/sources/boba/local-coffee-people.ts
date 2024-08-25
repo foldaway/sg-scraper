@@ -15,8 +15,8 @@ export default async function localCoffeePeople(
 
   const chain = ChainNames.localCoffeePeople;
 
-  const outlets: Boba[] = await page.evaluate((chain) => {
-    const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = await page.evaluate((chain) => {
+    const outlets: Omit<Boba, 'location'>[] = [];
 
     const columns = document.querySelectorAll(
       '#locateus .vc_column-inner .vc_column-inner'
@@ -32,12 +32,11 @@ export default async function localCoffeePeople(
         containerElement.querySelectorAll('p')
       );
 
-      const boba: Boba = {
+      const boba: Omit<Boba, 'location'> = {
         title: titleElement.textContent.trim(),
         address: addressElement.textContent.trim(),
         openingHours: openingHoursElement.textContent.trim(),
         phone: phoneElement.textContent.trim(),
-        location: '',
         chain,
       };
 

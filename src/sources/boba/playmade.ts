@@ -12,8 +12,8 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
   await page.goto('https://www.playmade.com.sg/say-hello');
 
   const chain = ChainNames.playmade;
-  const outlets: Boba[] = await page.evaluate((chain) => {
-    const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = await page.evaluate((chain) => {
+    const outlets: Omit<Boba, 'location'>[] = [];
 
     const container = document.querySelector(
       '#comp-kbz2ze2r'
@@ -25,9 +25,8 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
       .filter((x) => x.length > 0)
       .filter((x) => x !== `""`);
 
-    const boba: Boba = {
+    const boba: Omit<Boba, 'location'> = {
       title: '',
-      location: '',
       openingHours: '',
       phone: '',
       address: '',

@@ -1,3 +1,4 @@
+import { Point } from 'geojson';
 import { ChainName } from './constants';
 
 export interface Boba {
@@ -5,6 +6,6 @@ export interface Boba {
   address: string;
   phone: string;
   openingHours: string;
-  location: string;
+  location: Point | null;
   chain: ChainName;
 }

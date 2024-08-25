@@ -10,8 +10,8 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
   await page.goto('https://www.chichasanchen.com.sg/');
 
   const chain = ChainNames.chicha;
-  const outlets: Boba[] = await page.evaluate((chain) => {
-    const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = await page.evaluate((chain) => {
+    const outlets: Omit<Boba, 'location'>[] = [];
 
     const container = document.querySelector(
       'div[data-mesh-id="Containerc1dmpinlineContent-gridContainer"]'
@@ -33,12 +33,11 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
         continue;
       }
 
-      const boba: Boba = {
+      const boba: Omit<Boba, 'location'> = {
         title: '',
         address: '',
         openingHours: '',
         phone: '',
-        location: '',
         chain,
       };
 

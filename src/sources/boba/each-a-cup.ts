@@ -10,7 +10,7 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
   await page.goto('https://www.each-a-cup.com/stores/');
 
   const chain = ChainNames.eachACup;
-  const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = [];
 
   const storeElements = await page.$$('.store-itemBox');
 
@@ -29,12 +29,11 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
       (node) => node.textContent
     );
 
-    const boba: Boba = {
+    const boba: Omit<Boba, 'location'> = {
       title,
       address,
       openingHours,
       phone: '',
-      location: '',
       chain,
     };
 

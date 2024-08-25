@@ -11,8 +11,8 @@ export default async function kopifellas(browser: Browser) {
 
   const chain = ChainNames.kopifellas;
 
-  const outlets: Boba[] = await page.evaluate((chain) => {
-    const outlets: Boba[] = [];
+  const outlets: Omit<Boba, 'location'>[] = await page.evaluate((chain) => {
+    const outlets: Omit<Boba, 'location'>[] = [];
 
     const headers = document.querySelectorAll('.et_pb_module_header');
 
@@ -20,12 +20,11 @@ export default async function kopifellas(browser: Browser) {
       const description = (header.nextElementSibling as HTMLElement).innerText;
       const [address, openingHours] = description.split('\n');
 
-      const boba: Boba = {
+      const boba: Omit<Boba, 'location'> = {
         title: header.textContent,
         address: address.replace(/^Address:\s?/i, ''),
         openingHours,
         phone: '',
-        location: '',
         chain,
       };
 
