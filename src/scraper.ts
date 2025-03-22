@@ -1,7 +1,6 @@
 import puppeteer, { Browser } from 'puppeteer';
 import eachACup from './sources/boba/each-a-cup';
 import koi from './sources/boba/koi';
-import liho from './sources/boba/liho';
 import gongCha from './sources/boba/gong-cha';
 
 import { Boba } from './sources/boba/model';
@@ -37,7 +36,7 @@ if (SENTRY_DSN) {
 
 try {
   fs.mkdirSync('traces');
-} catch (e) {}
+} catch (e) { }
 
 async function boba(browser: Browser) {
   async function tempFunc(
@@ -65,7 +64,6 @@ async function boba(browser: Browser) {
     tempFunc(ChainNames.eachACup, eachACup),
     tempFunc(ChainNames.gongCha, gongCha),
     tempFunc(ChainNames.koi, koi),
-    tempFunc(ChainNames.liho, liho),
     tempFunc(ChainNames.mrCoconut, mrCoconut),
     tempFunc(ChainNames.playmade, playmade),
     tempFunc(ChainNames.kopifellas, kopifellas),

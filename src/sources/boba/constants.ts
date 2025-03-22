@@ -4,7 +4,6 @@ export const ChainNames = {
   eachACup: 'Each-A-Cup' as const,
   gongCha: 'Gong Cha' as const,
   koi: 'KOI' as const,
-  liho: 'LiHO' as const,
   mrCoconut: 'Mr Coconut' as const,
   playmade: 'Playmade' as const,
   kopifellas: 'Kopifellas' as const,
