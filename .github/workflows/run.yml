@@ -1,10 +1,10 @@
-name: 'Run scraper'
+name: "Run scraper"
 on:
   push:
     branches:
       - master
   schedule:
-    - cron: '0 0 * * 6'
+    - cron: "0 0 * * 6"
   workflow_dispatch:
 
 jobs:
@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 18
+      - name: Use Node.js 122
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -38,7 +38,7 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: output
-          commit_message: 'chore: deploy to GitHub Pages'
+          commit_message: "chore: deploy to GitHub Pages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload traces
