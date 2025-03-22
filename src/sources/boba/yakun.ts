@@ -4,51 +4,45 @@ import { Boba } from './model';
 import Bluebird from 'bluebird';
 import autoLocation from '../../util/autoLocation';
 
-const REGIONS = ['north', 'north-east', 'east', 'south', 'west', 'central'];
 
 export default async function yakun(browser: Browser) {
   const outlets: Omit<Boba, 'location'>[] = [];
 
-  for (const region of REGIONS) {
-    const page = await browser.newPage();
+  const page = await browser.newPage();
 
-    await page.goto(`http://yakun.com/find-us/local/${region}`);
+  await page.goto(`https://app.yakun.com/find-us`);
 
-    const chain = ChainNames.yakun;
+  const chain = ChainNames.yakun;
 
-    const scrapedOutlets: Omit<Boba, 'location'>[] = await page.evaluate(
-      (chain) => {
-        const outlets: Omit<Boba, 'location'>[] = [];
+  const scrapedOutlets: Omit<Boba, 'location'>[] = await page.evaluate(
+    (chain) => {
+      const outlets: Omit<Boba, 'location'>[] = [];
 
-        const boxes = document.querySelectorAll('.col-md-9');
+      const boxes = document.querySelectorAll('#local__all li');
 
-        for (const box of boxes) {
-          const title = box.querySelector('.title').textContent;
-          const table = box.querySelector('table table') as HTMLTableElement;
-          const [, address, , , phone, , openingHours] = table.innerText
-            .trim()
-            .split('\t')
-            .filter((x) => x.trim().length > 0)
-            .map((x) => x.trim().replace(/\n/g, ' '));
+      for (const box of boxes) {
+        const title = box.querySelector('.con_add_title').textContent;
+        const address = box.querySelector('.con_add_address').textContent;
+        const phone = box.querySelector('.con_add_phone').textContent;
+        const openingHours = box.querySelector('.con_add_time').textContent;
 
-          const boba: Omit<Boba, 'location'> = {
-            title,
-            address,
-            openingHours,
-            phone,
-            chain,
-          };
+        const boba: Omit<Boba, 'location'> = {
+          title,
+          address,
+          openingHours,
+          phone,
+          chain,
+        };
 
-          outlets.push(boba);
-        }
+        outlets.push(boba);
+      }
 
-        return outlets;
-      },
-      chain
-    );
+      return outlets;
+    },
+    chain
+  );
 
-    outlets.push(...scrapedOutlets);
-  }
+  outlets.push(...scrapedOutlets);
 
   return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
 }
