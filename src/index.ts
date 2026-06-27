@@ -230,7 +230,7 @@ export default {
 
       const generatedTime = {
         isoString: now.toISO(),
-        displayText: now.toFormat('lll ZZ'),
+        displayText: now.toFormat('LLL d, yyyy, HH:mm ZZ'),
       };
 
       const osInfo = {
