@@ -1,9 +1,8 @@
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-import { Browser } from 'puppeteer';
-import { Boba } from './model.js';
 import { ChainNames } from './constants';
-import { flatten } from 'lodash';
+import type { Boba } from './model.js';
 
 export default async function eachACup(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -26,7 +25,7 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
     const address = await addressElement.evaluate((node) => node.textContent);
 
     const openingHours = await openingHoursElement.evaluate(
-      (node) => node.textContent
+      (node) => node.textContent,
     );
 
     const boba: Omit<Boba, 'location'> = {
@@ -40,8 +39,8 @@ export default async function eachACup(browser: Browser): Promise<Boba[]> {
     outlets.push(boba);
   }
 
-  const data = flatten(outlets).map((outlet) =>
-    Object.assign(outlet, { chain })
-  );
-  return Bluebird.map(data, autoLocation, { concurrency: 1 });
+  const data = outlets.flat().map((outlet) => Object.assign(outlet, { chain }));
+  assert(data.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+  return Promise.all(data.map(autoLocation));
 }

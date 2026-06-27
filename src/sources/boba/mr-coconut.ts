@@ -1,8 +1,8 @@
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-import { Browser } from 'puppeteer';
-import { Boba } from './model';
 import { ChainNames } from './constants';
+import type { Boba } from './model';
 
 export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -50,5 +50,8 @@ export default async function mrCoconut(browser: Browser): Promise<Boba[]> {
     return outlets;
   }, chain);
 
-  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
+  assert(outlets.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+
+  return Promise.all(outlets.map(autoLocation));
 }

@@ -178,3 +178,7 @@ public/
 dist/
 output/
 traces
+.wrangler
+
+.dev.vars
+

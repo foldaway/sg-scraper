@@ -1,7 +1,4 @@
-import axios from 'axios';
-import querystring from 'querystring';
-
-const BASE_URL = 'https://www.onemap.gov.sg';
+import { env } from 'cloudflare:workers';
 
 export interface Response {
   found: number;
@@ -22,17 +19,21 @@ export interface Result {
  * Search using Onemap.sg
  */
 export default async function search(term: string): Promise<Response> {
-  const query = {
-    searchVal: term,
-    returnGeom: 'Y',
-    getAddrDetails: 'N',
-    pageNum: '1',
-  };
-  const response = await axios.get(
-    `${BASE_URL}/api/common/elastic/search?${querystring.stringify(query)}`,
-    {
-      responseType: 'json',
-    }
+  const requestUrl = new URL(
+    '/api/common/elastic/search',
+    env.ONEMAP_PROXY_URL,
   );
-  return response.data;
+  requestUrl.searchParams.set('searchVal', term);
+  requestUrl.searchParams.set('returnGeom', 'Y');
+  requestUrl.searchParams.set('getAddrDetails', 'N');
+  requestUrl.searchParams.set('pageNum', '1');
+  const response = await fetch(requestUrl, {
+    headers: {
+      Authorization: `Bearer ${env.ONEMAP_PROXY_API_KEY}`,
+    },
+  });
+  if (!response.ok) {
+    console.log(response, await response.text());
+  }
+  return response.json();
 }

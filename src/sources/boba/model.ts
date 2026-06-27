@@ -1,5 +1,5 @@
-import { Point } from 'geojson';
-import { ChainName } from './constants';
+import type { Point } from 'geojson';
+import type { ChainName } from './constants';
 
 export interface Boba {
   title: string;

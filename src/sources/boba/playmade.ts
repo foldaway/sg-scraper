@@ -1,13 +1,11 @@
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-import { Browser } from 'puppeteer';
-import { Boba } from './model.js';
 import { ChainNames } from './constants';
+import type { Boba } from './model.js';
 
 export default async function playmade(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
-
-  await page.tracing.start({ path: 'traces/playmade.json', screenshots: true });
 
   await page.goto('https://www.playmade.com.sg/say-hello');
 
@@ -16,7 +14,7 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
     const outlets: Omit<Boba, 'location'>[] = [];
 
     const container = document.querySelector(
-      '#comp-kbz2ze2r'
+      '#comp-kbz2ze2r',
     ) as HTMLDivElement;
     const lines = container.innerText
       .replace(/[\u200Bb]/g, '')
@@ -65,7 +63,8 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
     return outlets;
   }, chain);
 
-  await page.tracing.stop();
+  assert(outlets.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
 
-  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
+  return Promise.all(outlets.map(autoLocation));
 }

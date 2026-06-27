@@ -1,9 +1,8 @@
-import { Browser } from 'puppeteer';
-import { ChainNames } from './constants';
-import { Boba } from './model';
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-
+import { ChainNames } from './constants';
+import type { Boba } from './model';
 
 export default async function yakun(browser: Browser) {
   const outlets: Omit<Boba, 'location'>[] = [];
@@ -39,10 +38,13 @@ export default async function yakun(browser: Browser) {
 
       return outlets;
     },
-    chain
+    chain,
   );
 
   outlets.push(...scrapedOutlets);
 
-  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
+  assert(outlets.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+
+  return Promise.all(outlets.map(autoLocation));
 }
