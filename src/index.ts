@@ -153,64 +153,63 @@ async function boba(browser: Browser) {
     },
   ];
 
-  if (env.TIER === 'development') {
-    const data: Record<ChainName, Boba[]> = {
-      [ChainNames.blackball]: [],
-      [ChainNames.kopifellas]: [],
-      [ChainNames.localCoffeePeople]: [],
-      [ChainNames.mrCoconut]: [],
-      [ChainNames.playmade]: [],
-      [ChainNames.koi]: [],
-      [ChainNames.eachACup]: [],
-      [ChainNames.gongCha]: [],
-      [ChainNames.chicha]: [],
-      [ChainNames.yakun]: [],
-    };
+  const data: Record<ChainName, Boba[]> = {
+    [ChainNames.blackball]: [],
+    [ChainNames.kopifellas]: [],
+    [ChainNames.localCoffeePeople]: [],
+    [ChainNames.mrCoconut]: [],
+    [ChainNames.playmade]: [],
+    [ChainNames.koi]: [],
+    [ChainNames.eachACup]: [],
+    [ChainNames.gongCha]: [],
+    [ChainNames.chicha]: [],
+    [ChainNames.yakun]: [],
+  };
 
+  if (env.TIER === 'development') {
     for (const { chainName, workFunc } of scrapers) {
       const result = await scraperLimit(() => scrapeChain(chainName, workFunc));
       data[chainName] = result.data;
     }
-
-    await env.OUTPUT_BUCKET.put(FileNames.boba, JSON.stringify(data));
-    return;
-  }
-
-  const results = await Promise.all(
-    scrapers.map(({ chainName, workFunc }) =>
-      scraperLimit(() => scrapeChain(chainName, workFunc)).then(
-        (value) => ({ status: 'fulfilled' as const, value }),
-        (reason) => ({ status: 'rejected' as const, reason }),
+  } else {
+    const results = await Promise.all(
+      scrapers.map(({ chainName, workFunc }) =>
+        scraperLimit(() => scrapeChain(chainName, workFunc)).then(
+          (value) => ({ status: 'fulfilled' as const, value }),
+          (reason) => ({ status: 'rejected' as const, reason }),
+        ),
       ),
-    ),
-  );
-  const failures: BobaScrapeFailure[] = [];
-  const data: Boba[][] = [];
+    );
 
-  for (const result of results) {
-    if (result.status === 'fulfilled') {
-      data.push(result.value.data);
-      continue;
+    const failures: BobaScrapeFailure[] = [];
+
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        data[result.value.chainName] = result.value.data;
+        continue;
+      }
+
+      if (result.reason instanceof BobaChainScrapeError) {
+        failures.push({
+          chainName: result.reason.chainName,
+          reason: result.reason.reason,
+        });
+      } else {
+        failures.push({
+          chainName: 'Unknown',
+          reason: result.reason,
+        });
+      }
     }
 
-    if (result.reason instanceof BobaChainScrapeError) {
-      failures.push({
-        chainName: result.reason.chainName,
-        reason: result.reason.reason,
-      });
-    } else {
-      failures.push({
-        chainName: 'Unknown',
-        reason: result.reason,
-      });
+    if (failures.length > 0) {
+      throw new BobaScrapeError(failures);
     }
   }
 
-  if (failures.length > 0) {
-    throw new BobaScrapeError(failures);
-  }
-
-  await env.OUTPUT_BUCKET.put(FileNames.boba, JSON.stringify(data));
+  await env.OUTPUT_BUCKET.put(FileNames.boba, JSON.stringify(data), {
+    httpMetadata: { contentType: 'application/json' },
+  });
 }
 
 async function hawker() {
@@ -219,6 +218,9 @@ async function hawker() {
   await env.OUTPUT_BUCKET.put(
     FileNames.hawker,
     JSON.stringify({ hawker: data }),
+    {
+      httpMetadata: { contentType: 'application/json' },
+    },
   );
 }
 
@@ -257,7 +259,9 @@ export default {
         generatedTime,
       });
 
-      await env.OUTPUT_BUCKET.put('index.html', indexPage);
+      await env.OUTPUT_BUCKET.put('index.html', indexPage, {
+        httpMetadata: { contentType: 'text/html' },
+      });
     } catch (e) {
       if (shouldKeepBrowserOpen(e)) {
         logBrowserKeptOpen(e);

@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 import dataGovApi from '../../util/data-gov-api';
 import type { Hawker, HawkerRaw } from './model';
 
-const TODAY = DateTime.now();
 const KEYS = ['q1', 'q2', 'q3', 'q4', 'others'];
 const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
 
@@ -13,14 +12,16 @@ const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
  * hence only enddate is only use to find the closest event
  */
 const getCloseDetails = (hawker: HawkerRaw) => {
+  const TODAY = DateTime.now();
+
   const upcomingClosures: { key: string; endDate: DateTime }[] = [];
 
   for (const key of KEYS) {
     const tempKey =
       key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
-    const rawEndDate = DateTime.fromFormat(`${hawker[tempKey]}`, 'dd/MM/yyyy')
-      .setZone('Asia/Singapore')
-      .plus({ days: 1 });
+    const rawEndDate = DateTime.fromFormat(`${hawker[tempKey]}`, 'dd/MM/yyyy', {
+      zone: 'Asia/Singapore',
+    }).plus({ days: 1 });
 
     if (TODAY < rawEndDate) {
       upcomingClosures.push({ key, endDate: rawEndDate });
@@ -41,10 +42,9 @@ const getCloseDetails = (hawker: HawkerRaw) => {
         ? 'other_works_startdate'
         : `${upcoming.key}_cleaningstartdate`;
 
-    const closeStartDate = DateTime.fromFormat(
-      `${hawker[key]}`,
-      'dd/MM/yyyy',
-    ).setZone('Asia/Singapore');
+    const closeStartDate = DateTime.fromFormat(`${hawker[key]}`, 'dd/MM/yyyy', {
+      zone: 'Asia/Singapore',
+    });
 
     return {
       closeStartDate: closeStartDate.valueOf(),
