@@ -1,4 +1,4 @@
-import search, { Response } from '../onemap/onemap';
+import search, { type Response } from '../onemap/onemap';
 
 const CACHE: Record<string, Response> = {};
 
@@ -7,7 +7,7 @@ const CACHE: Record<string, Response> = {};
  * @param {string} rawText
  */
 export default async function lookupLocation(
-  rawText: string
+  rawText: string,
 ): Promise<Response> {
   const isCachedResultAvailable = rawText in CACHE;
 

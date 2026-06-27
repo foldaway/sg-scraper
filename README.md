@@ -1,10 +1,33 @@
 # sg-scraper
 ![.github/workflows/run.yml](https://github.com/bottleneckco/sg-scraper/workflows/.github/workflows/run.yml/badge.svg)
 
-Scripts to scrape metadata of places in Singapore.
+Scheduled Cloudflare Worker that scrapes metadata for Singapore places and
+publishes static JSON outputs to R2.
 
-### Development
-1. Run `yarn install`
-2. Run `docker-compose up` to spin up an instance of PostgreSQL (main data store) and Redis (for OneMap caching)
-3. Run `yarn dev:scrape` to start the scraper. In non-production environments, this will launch Chromium.
-  Adjust `scraper.ts` accordingly for testing purposes (e.g. disable other sources in order to save time)
+## Development
+
+1. Run `npm install`.
+2. Run `npm run dev`.
+3. Trigger the scheduled handler locally:
+
+   ```sh
+   npm run dev:scheduled-trigger
+   ```
+
+Useful checks:
+
+```sh
+npm run typecheck
+npm run check
+npm run validate
+```
+
+## Agent Harness
+
+This repo is set up with a small agent harness based on OpenAI's harness
+engineering research:
+
+- [AGENTS.md](AGENTS.md) is the short entry point for agents.
+- [ARCHITECTURE.md](ARCHITECTURE.md) maps runtime flow and source boundaries.
+- [docs/README.md](docs/README.md) indexes the versioned knowledge base.
+- `npm run validate:harness` checks that the harness remains discoverable.

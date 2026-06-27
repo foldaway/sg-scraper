@@ -10,7 +10,12 @@
     "dev": "X_BROWSER_HEADFUL=true vite dev",
     "build": "CLOUDFLARE_ENV=production vite build",
     "dev:scheduled-trigger": "curl http://localhost:5173/cdn-cgi/handler/scheduled?format=json",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "check": "biome check AGENTS.md ARCHITECTURE.md README.md docs scripts src package.json tsconfig.json tsconfig.typecheck.json vite.config.ts wrangler.jsonc",
+    "check:fix": "biome check AGENTS.md ARCHITECTURE.md README.md docs scripts src package.json tsconfig.json tsconfig.typecheck.json vite.config.ts wrangler.jsonc --write",
+    "validate:harness": "node scripts/validate-agent-harness.mjs",
+    "validate": "npm run typecheck && npm run check && npm run validate:harness"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.1",
