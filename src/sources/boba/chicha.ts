@@ -1,8 +1,8 @@
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-import { Browser } from 'puppeteer';
-import { Boba } from './model.js';
 import { ChainNames } from './constants';
+import type { Boba } from './model.js';
 
 export default async function chicha(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -14,16 +14,16 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
     const outlets: Omit<Boba, 'location'>[] = [];
 
     const container = document.querySelector(
-      'div[data-mesh-id="Containerc1dmpinlineContent-gridContainer"]'
+      'div[data-mesh-id="Containerc1dmpinlineContent-gridContainer"]',
     );
     const stores = container.querySelectorAll(
-      'div[data-testid="richTextElement"]'
+      'div[data-testid="richTextElement"]',
     );
 
     for (const store of stores) {
       const spans = [...store.querySelectorAll('span')].filter((span) => {
         const childTextNodes = [...span.childNodes].filter(
-          (node) => node.nodeType === Node.TEXT_NODE
+          (node) => node.nodeType === Node.TEXT_NODE,
         );
 
         return childTextNodes.length > 0;
@@ -74,5 +74,8 @@ export default async function chicha(browser: Browser): Promise<Boba[]> {
     return outlets;
   }, chain);
 
-  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
+  assert(outlets.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+
+  return Promise.all(outlets.map(autoLocation));
 }

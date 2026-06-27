@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 interface Response<TResponse> {
   help: string;
   success: boolean;
@@ -25,16 +23,15 @@ const url = 'https://data.gov.sg/api/action/datastore_search';
 
 export default async function dataGovApi<TResponse>(
   resource_id: string,
-  params: Record<string, string | number> = {}
+  params: Record<string, string | number> = {},
 ): Promise<Response<TResponse>> {
-  const query = {
-    resource_id,
-    ...params,
-  };
-  const response = await axios.get(url, {
-    responseType: 'json',
-    params: query,
-  });
+  const requestUrl = new URL(url);
+  requestUrl.searchParams.set('resource_id', resource_id);
+  for (const [key, value] of Object.entries(params)) {
+    requestUrl.searchParams.set(key, String(value));
+  }
 
-  return response.data;
+  const response = await fetch(requestUrl);
+
+  return response.json();
 }

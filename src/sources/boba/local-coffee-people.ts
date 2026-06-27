@@ -1,11 +1,11 @@
-import { Browser } from 'puppeteer';
-import { Boba } from './model';
-import Bluebird from 'bluebird';
-import { ChainNames } from './constants';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
+import { ChainNames } from './constants';
+import type { Boba } from './model';
 
 export default async function localCoffeePeople(
-  browser: Browser
+  browser: Browser,
 ): Promise<Boba[]> {
   const page = await browser.newPage();
 
@@ -19,7 +19,7 @@ export default async function localCoffeePeople(
     const outlets: Omit<Boba, 'location'>[] = [];
 
     const columns = document.querySelectorAll(
-      '#locateus .vc_column-inner .vc_column-inner'
+      '#locateus .vc_column-inner .vc_column-inner',
     );
 
     for (const column of columns) {
@@ -29,7 +29,7 @@ export default async function localCoffeePeople(
       }
       const titleElement = containerElement.querySelector('h5');
       const [addressElement, phoneElement, openingHoursElement] = Array.from(
-        containerElement.querySelectorAll('p')
+        containerElement.querySelectorAll('p'),
       );
 
       const boba: Omit<Boba, 'location'> = {
@@ -46,5 +46,8 @@ export default async function localCoffeePeople(
     return outlets;
   }, chain);
 
-  return Bluebird.map(outlets, autoLocation, { concurrency: 1 });
+  assert(outlets.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+
+  return Promise.all(outlets.map(autoLocation));
 }

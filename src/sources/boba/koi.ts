@@ -1,8 +1,8 @@
-import Bluebird from 'bluebird';
+import assert from 'node:assert';
+import type { Browser } from '@cloudflare/puppeteer';
 import autoLocation from '../../util/autoLocation';
-import { Browser } from 'puppeteer';
-import { Boba } from './model';
 import { ChainNames } from './constants';
+import type { Boba } from './model';
 
 export default async function koi(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
@@ -68,7 +68,7 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
     }, chain);
 
     console.log(
-      `[KOI] collected ${currentPageOutlets.length} outlets from ${page.url()}`
+      `[KOI] collected ${currentPageOutlets.length} outlets from ${page.url()}`,
     );
 
     outlets.push(...currentPageOutlets);
@@ -77,7 +77,7 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
     if (nextButton != null) {
       console.log('[KOI] Going next page.');
       const url = await nextButton.evaluate(
-        (element) => (element as HTMLAnchorElement).href
+        (element) => (element as HTMLAnchorElement).href,
       );
       await page.goto(url);
     } else {
@@ -88,5 +88,8 @@ export default async function koi(browser: Browser): Promise<Boba[]> {
 
   const data = outlets.map((outlet) => Object.assign(outlet, { chain }));
 
-  return Bluebird.map(data, autoLocation, { concurrency: 1 });
+  assert(data.length > 0, 'Expected at least one scraped outlet');
+  await page.close();
+
+  return Promise.all(data.map(autoLocation));
 }

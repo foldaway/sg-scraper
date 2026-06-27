@@ -1,10 +1,8 @@
-import { orderBy } from 'lodash';
-import moment, { Moment } from 'moment-timezone';
-
-import { Hawker, HawkerRaw } from './model';
+import { DateTime } from 'luxon';
 import dataGovApi from '../../util/data-gov-api';
+import type { Hawker, HawkerRaw } from './model';
 
-const TODAY = moment();
+const TODAY = DateTime.now();
 const KEYS = ['q1', 'q2', 'q3', 'q4', 'others'];
 const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
 
@@ -15,19 +13,19 @@ const RESOURCE_ID = 'b80cb643-a732-480d-86b5-e03957bc82aa';
  * hence only enddate is only use to find the closest event
  */
 const getCloseDetails = (hawker: HawkerRaw) => {
-  const upcomingClosures: { key: string; endDate: Moment }[] = [];
+  const upcomingClosures: { key: string; endDate: DateTime }[] = [];
 
   for (const key of KEYS) {
     const tempKey =
       key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
-    const rawEndDate = moment.tz(
+    const rawEndDate = DateTime.fromFormat(
       `${hawker[tempKey]} 00:00`,
       'DD/MM/YYYY',
-      'Asia/Singapore'
-    );
-    rawEndDate.add(1, 'days');
+    )
+      .setZone('Asia/Singapore')
+      .plus({ days: 1 });
 
-    if (TODAY.isBefore(rawEndDate)) {
+    if (TODAY < rawEndDate) {
       upcomingClosures.push({ key, endDate: rawEndDate });
     }
   }
@@ -36,7 +34,9 @@ const getCloseDetails = (hawker: HawkerRaw) => {
     return null;
   }
 
-  const upcomingSorted = orderBy(upcomingClosures, ['endDate'], ['asc']);
+  const upcomingSorted = [...upcomingClosures].sort(
+    (a, b) => a.endDate.valueOf() - b.endDate.valueOf(),
+  );
 
   const hawkerClosure = upcomingSorted.map((upcoming) => {
     const key =
@@ -44,11 +44,10 @@ const getCloseDetails = (hawker: HawkerRaw) => {
         ? 'other_works_startdate'
         : `${upcoming.key}_cleaningstartdate`;
 
-    const closeStartDate = moment.tz(
+    const closeStartDate = DateTime.fromFormat(
       `${hawker[key]} 00:00`,
       'DD/MM/YYYY',
-      'Asia/Singapore'
-    );
+    ).setZone('Asia/Singapore');
 
     return {
       closeStartDate: closeStartDate.valueOf(),
