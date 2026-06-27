@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "X_BROWSER_HEADFUL=true vite dev",
     "build": "vite build",
-    "dev:scrape": "ts-node src/scraper.ts",
     "dev:scheduled-trigger": "curl http://localhost:5173/cdn-cgi/handler/scheduled?format=json",
     "cf-typegen": "wrangler types"
   },
