@@ -7,8 +7,6 @@ import type { Boba } from './model.js';
 export default async function playmade(browser: Browser): Promise<Boba[]> {
   const page = await browser.newPage();
 
-  await page.tracing.start({ path: 'traces/playmade.json', screenshots: true });
-
   await page.goto('https://www.playmade.com.sg/say-hello');
 
   const chain = ChainNames.playmade;
@@ -64,8 +62,6 @@ export default async function playmade(browser: Browser): Promise<Boba[]> {
 
     return outlets;
   }, chain);
-
-  await page.tracing.stop();
 
   assert(outlets.length > 0, 'Expected at least one scraped outlet');
   await page.close();
