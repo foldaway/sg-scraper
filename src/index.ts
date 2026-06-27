@@ -154,11 +154,22 @@ async function boba(browser: Browser) {
   ];
 
   if (env.TIER === 'development') {
-    const data: Boba[][] = [];
+    const data: Record<ChainName, Boba[]> = {
+      [ChainNames.blackball]: [],
+      [ChainNames.kopifellas]: [],
+      [ChainNames.localCoffeePeople]: [],
+      [ChainNames.mrCoconut]: [],
+      [ChainNames.playmade]: [],
+      [ChainNames.koi]: [],
+      [ChainNames.eachACup]: [],
+      [ChainNames.gongCha]: [],
+      [ChainNames.chicha]: [],
+      [ChainNames.yakun]: [],
+    };
 
     for (const { chainName, workFunc } of scrapers) {
       const result = await scraperLimit(() => scrapeChain(chainName, workFunc));
-      data.push(result.data);
+      data[chainName] = result.data;
     }
 
     await env.OUTPUT_BUCKET.put(FileNames.boba, JSON.stringify(data));
@@ -205,7 +216,10 @@ async function boba(browser: Browser) {
 async function hawker() {
   const data = await hawkers();
 
-  await env.OUTPUT_BUCKET.put(FileNames.hawker, JSON.stringify(data));
+  await env.OUTPUT_BUCKET.put(
+    FileNames.hawker,
+    JSON.stringify({ hawker: data }),
+  );
 }
 
 export default {
