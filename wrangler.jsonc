@@ -3,5 +3,8 @@
   "name": "sg-scraper",
   // Set this to today's date
   "compatibility_date": "2026-06-24",
-  "main": "./src/index.ts"
+  "main": "./src/index.ts",
+  "browser": {
+    "binding": "BROWSER"
+  }
 }
