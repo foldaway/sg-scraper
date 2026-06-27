@@ -24,6 +24,7 @@
     "wrangler": "4.105.0"
   },
   "dependencies": {
-    "luxon": "3.7.2"
+    "luxon": "3.7.2",
+    "p-limit": "7.3.0"
   }
 }
