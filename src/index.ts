@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/cloudflare';
 import { DateTime } from 'luxon';
 import mustache from 'mustache';
 import pLimit from 'p-limit';
+import chagee from './sources/boba/chagee';
 import chicha from './sources/boba/chicha';
 import { type ChainName, ChainNames } from './sources/boba/constants';
 import eachACup from './sources/boba/each-a-cup';
@@ -123,6 +124,7 @@ async function boba(browser: Browser) {
   }
 
   const scrapers: BobaScraper[] = [
+    { chainName: ChainNames.chagee, workFunc: chagee },
     { chainName: ChainNames.chicha, workFunc: chicha },
     { chainName: ChainNames.eachACup, workFunc: eachACup },
     { chainName: ChainNames.koi, workFunc: koi },
@@ -138,6 +140,7 @@ async function boba(browser: Browser) {
 
   const data: Record<ChainName, Boba[]> = {
     [ChainNames.blackball]: [],
+    [ChainNames.chagee]: [],
     [ChainNames.kopifellas]: [],
     [ChainNames.localCoffeePeople]: [],
     [ChainNames.mrCoconut]: [],
