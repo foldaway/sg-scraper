@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers';
 import os from 'node:os';
 import puppeteer, { type Browser } from '@cloudflare/puppeteer';
+import * as Sentry from '@sentry/cloudflare';
 import { DateTime } from 'luxon';
 import mustache from 'mustache';
 import pLimit from 'p-limit';
@@ -213,54 +214,62 @@ async function hawker() {
   );
 }
 
-export default {
-  async scheduled() {
-    const browser = await puppeteer.launch(env.BROWSER);
-    let closeBrowser = true;
-
-    try {
-      await runWorkSection('boba', () => boba(browser), {
-        keepBrowserOpenInDevelopment: true,
-      });
-      await runWorkSection('hawker', hawker);
-
-      // Generate index.html
-
-      const now = DateTime.now();
-
-      const generatedTime = {
-        isoString: now.toISO(),
-        displayText: now.toFormat('LLL d, yyyy, HH:mm ZZ'),
-      };
-
-      const osInfo = {
-        platform: os.platform(),
-        arch: os.arch(),
-      };
-
-      console.log({ generatedTime, osInfo });
-
-      const files = Object.values(FileNames);
-
-      const indexPage = mustache.render(templateStr, {
-        files,
-        osInfo,
-        generatedTime,
-      });
-
-      await env.OUTPUT_BUCKET.put('index.html', indexPage, {
-        httpMetadata: { contentType: 'text/html' },
-      });
-    } catch (e) {
-      if (shouldKeepBrowserOpen(e)) {
-        logBrowserKeptOpen(e);
-        closeBrowser = false;
-      }
-      throw e;
-    } finally {
-      if (closeBrowser) {
-        await browser.close();
-      }
-    }
+export default Sentry.withSentry(
+  (env) => {
+    return {
+      dsn: env.SENTRY_DSN,
+      environment: env.TIER,
+    };
   },
-} satisfies ExportedHandler<Env>;
+  {
+    async scheduled() {
+      const browser = await puppeteer.launch(env.BROWSER);
+      let closeBrowser = true;
+
+      try {
+        await runWorkSection('boba', () => boba(browser), {
+          keepBrowserOpenInDevelopment: true,
+        });
+        await runWorkSection('hawker', hawker);
+
+        // Generate index.html
+
+        const now = DateTime.now();
+
+        const generatedTime = {
+          isoString: now.toISO(),
+          displayText: now.toFormat('LLL d, yyyy, HH:mm ZZ'),
+        };
+
+        const osInfo = {
+          platform: os.platform(),
+          arch: os.arch(),
+        };
+
+        console.log({ generatedTime, osInfo });
+
+        const files = Object.values(FileNames);
+
+        const indexPage = mustache.render(templateStr, {
+          files,
+          osInfo,
+          generatedTime,
+        });
+
+        await env.OUTPUT_BUCKET.put('index.html', indexPage, {
+          httpMetadata: { contentType: 'text/html' },
+        });
+      } catch (e) {
+        if (shouldKeepBrowserOpen(e)) {
+          logBrowserKeptOpen(e);
+          closeBrowser = false;
+        }
+        throw e;
+      } finally {
+        if (closeBrowser) {
+          await browser.close();
+        }
+      }
+    },
+  } satisfies ExportedHandler<Env>,
+);
