@@ -8,7 +8,6 @@ import pLimit from 'p-limit';
 import chicha from './sources/boba/chicha';
 import { type ChainName, ChainNames } from './sources/boba/constants';
 import eachACup from './sources/boba/each-a-cup';
-import gongCha from './sources/boba/gong-cha';
 import koi from './sources/boba/koi';
 import kopifellas from './sources/boba/kopifellas';
 import localCoffeePeople from './sources/boba/local-coffee-people';
@@ -126,7 +125,6 @@ async function boba(browser: Browser) {
   const scrapers: BobaScraper[] = [
     { chainName: ChainNames.chicha, workFunc: chicha },
     { chainName: ChainNames.eachACup, workFunc: eachACup },
-    { chainName: ChainNames.gongCha, workFunc: gongCha },
     { chainName: ChainNames.koi, workFunc: koi },
     { chainName: ChainNames.mrCoconut, workFunc: mrCoconut },
     { chainName: ChainNames.playmade, workFunc: playmade },
@@ -146,7 +144,6 @@ async function boba(browser: Browser) {
     [ChainNames.playmade]: [],
     [ChainNames.koi]: [],
     [ChainNames.eachACup]: [],
-    [ChainNames.gongCha]: [],
     [ChainNames.chicha]: [],
     [ChainNames.yakun]: [],
   };

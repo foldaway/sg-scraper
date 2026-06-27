@@ -2,7 +2,6 @@ export const ChainNames = {
   blackball: 'Blackball' as const,
   chicha: 'ChiCha' as const,
   eachACup: 'Each-A-Cup' as const,
-  gongCha: 'Gong Cha' as const,
   koi: 'KOI' as const,
   mrCoconut: 'Mr Coconut' as const,
   playmade: 'Playmade' as const,
