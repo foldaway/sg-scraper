@@ -18,6 +18,9 @@
     }
   ],
   "vars": { "TIER": "development" },
+  "version_metadata": {
+    "binding": "CF_VERSION_METADATA"
+  },
   "env": {
     "production": {
       "vars": {
@@ -31,7 +34,10 @@
           "binding": "OUTPUT_BUCKET",
           "bucket_name": "sg-scraper-data"
         }
-      ]
+      ],
+      "version_metadata": {
+        "binding": "CF_VERSION_METADATA"
+      }
     }
   }
 }
