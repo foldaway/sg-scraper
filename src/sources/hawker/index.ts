@@ -18,10 +18,7 @@ const getCloseDetails = (hawker: HawkerRaw) => {
   for (const key of KEYS) {
     const tempKey =
       key === 'others' ? 'other_works_enddate' : `${key}_cleaningenddate`;
-    const rawEndDate = DateTime.fromFormat(
-      `${hawker[tempKey]} 00:00`,
-      'DD/MM/YYYY',
-    )
+    const rawEndDate = DateTime.fromFormat(`${hawker[tempKey]}`, 'dd/MM/yyyy')
       .setZone('Asia/Singapore')
       .plus({ days: 1 });
 
@@ -45,8 +42,8 @@ const getCloseDetails = (hawker: HawkerRaw) => {
         : `${upcoming.key}_cleaningstartdate`;
 
     const closeStartDate = DateTime.fromFormat(
-      `${hawker[key]} 00:00`,
-      'DD/MM/YYYY',
+      `${hawker[key]}`,
+      'dd/MM/yyyy',
     ).setZone('Asia/Singapore');
 
     return {
