@@ -5,6 +5,7 @@
   "repository": "git@github.com:bottleneckco/sg-scraper.git",
   "author": "Duncan Leo <hello@duncanleo.me>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "scrape": "node dist/scraper.js",
     "dev:scrape": "ts-node src/scraper.ts",
