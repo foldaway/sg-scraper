@@ -235,7 +235,7 @@ export default {
 
       console.log({ generatedTime, osInfo });
 
-      const files = Object.keys(FileNames);
+      const files = Object.values(FileNames);
 
       const indexPage = mustache.render(templateStr, {
         files,
