@@ -6,7 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/index.ts",
   "triggers": {
-    "crons": ["0 0 * * 6"]
+    "crons": ["0 0 * * sat"]
   },
   "browser": {
     "binding": "BROWSER"

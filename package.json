@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "X_BROWSER_HEADFUL=true vite dev",
-    "build": "vite build",
+    "build": "CLOUDFLARE_ENV=production vite build",
     "dev:scheduled-trigger": "curl http://localhost:5173/cdn-cgi/handler/scheduled?format=json",
     "cf-typegen": "wrangler types"
   },

@@ -75,22 +75,6 @@ class BobaChainScrapeError extends Error {
   }
 }
 
-class BobaScrapeError extends Error {
-  readonly failures: BobaScrapeFailure[];
-
-  constructor(failures: BobaScrapeFailure[]) {
-    const chainNames = failures.map(({ chainName }) => chainName).join(', ');
-
-    super(
-      `Failed to scrape ${failures.length} boba chain${
-        failures.length === 1 ? '' : 's'
-      }: ${chainNames}`,
-    );
-    this.name = 'BobaScrapeError';
-    this.failures = failures;
-  }
-}
-
 function shouldKeepBrowserOpen(error: unknown): boolean {
   return (
     env.TIER === 'development' &&
@@ -203,7 +187,12 @@ async function boba(browser: Browser) {
     }
 
     if (failures.length > 0) {
-      throw new BobaScrapeError(failures);
+      console.error(
+        `Failed to scrape ${failures.length} boba chain${
+          failures.length === 1 ? '' : 's'
+        }; publishing successful results`,
+        failures,
+      );
     }
   }
 
